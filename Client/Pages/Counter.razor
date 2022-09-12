@@ -1,0 +1,39 @@
+﻿@page "/counter"
+@implements IDisposable
+@inject StateContainer StateContainer
+
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+        currentCount = StateContainer.Property.Counter;
+    }
+
+    private void ChangePropertyValue()
+    {
+        StateContainer.Property.Counter = currentCount; 
+    }
+
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
+
+
+    private void IncrementCount()
+    {
+        currentCount++;
+        ChangePropertyValue();
+    }
+}
