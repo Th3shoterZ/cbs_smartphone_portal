@@ -1,4 +1,5 @@
 ﻿@page "/phone/{Id}"
+@using SmartphonePortal_WV_KW.Shared.ViewModels
 @inject HttpClient Http
 
 
@@ -8,16 +9,29 @@
 
 @code {
     [Parameter]
-    public string Id { get; set; }
+    public int Id { get; set; }
 
-    private object SmartphoneDetails { get; set; }
+    private SmartphoneDetailsViewModel? SmartphoneDetails { get; set; }
+    private string ErrorMessage { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        GetSmartphoneDetails();
+        await GetSmartphoneDetails();
     }
+
     private async Task GetSmartphoneDetails()
     {
-        SmartphoneDetails = await Http.GetFromJsonAsync<object>($"api/getsmartphonedetails?id={Id}");
+        try
+        {
+            var phonedeets = await Http.GetFromJsonAsync<SmartphoneDetailsViewModel>($"api/getsmartphonedetails?id={Id}");
+            if (phonedeets != null)
+            {
+                SmartphoneDetails = phonedeets;
+            }
+        }
+        catch (Exception e)
+        {
+            ErrorMessage = e.Message;   
+        }
     }
 }
