@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -13,8 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\SmartphonePortal_WV.Client.csproj" />
-    <ProjectReference Include="..\Shared\SmartphonePortal_WV.Shared.csproj" />
+    <ProjectReference Include="..\Client\SmartphonePortal_WV_KW.Client.csproj" />
+    <ProjectReference Include="..\Shared\SmartphonePortal_WV_KW.Shared.csproj" />
+    <ProjectReference Include="..\SmartphonePortal_WV.core\SmartphonePortal_WV_KW.core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

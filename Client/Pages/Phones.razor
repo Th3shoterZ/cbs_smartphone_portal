@@ -1,8 +1,11 @@
 ﻿@page "/phones"
+@using SmartphonePortal_WV.Shared.ViewModels
+
+@inject HttpClient Http
 
 <h3>Phones</h3>
 
-@foreach(string s in _randoStrings)
+@foreach(SmartphoneViewModel phone in Smartphones)
 {
     <div class="card">
         <div class="card-body row">
@@ -10,9 +13,8 @@
                 <img src="/TestFolder/tel.jpeg" alt="tel">
             </div>
             <div class="col-8">
-                <h5 class="card-title">@s</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="/phone/@s" class="stretched-link" /> 
+                <h5 class="card-title">@phone.Name</h5>
+                <a href="/phone/@phone.Id" class="stretched-link" /> 
             </div>
         </div>
     </div>
@@ -24,16 +26,29 @@
     }
 </style>
 
-    @code {
-    private List<string> _randoStrings = new List<string>();
-    protected override void OnInitialized()
+@code {
+    private List<SmartphoneViewModel> Smartphones { get; set; } = new List<SmartphoneViewModel>();
+    private string ErrorMessage { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
     {
-        _randoStrings = new List<string>()
+        await GetSmartphones();
+    }
+
+    private async Task GetSmartphones()
+    {
+        try
         {
-            "njksaasknasndlkn",
-            "asjlkdasdjjlk",
-            "njsajkjnasdnk",
-            "just another random string omegalul"
-        };
+            var phones = await Http.GetFromJsonAsync<List<SmartphoneViewModel>>("api/smartphones");
+            if(phones != null && phones.Count > 0)
+            {
+                Smartphones = phones;
+            }
+        }
+        catch(Exception e)
+        {
+            // todo show error 
+            ErrorMessage = e.Message;
+        } 
     }
 }
