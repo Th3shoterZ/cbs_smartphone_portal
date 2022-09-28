@@ -1,0 +1,39 @@
+﻿@page "/phones"
+
+<h3>Phones</h3>
+
+@foreach(string s in _randoStrings)
+{
+    <div class="card">
+        <div class="card-body row">
+            <div class="col-4">
+                <img src="/TestFolder/tel.jpeg" alt="tel">
+            </div>
+            <div class="col-8">
+                <h5 class="card-title">@s</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="/phone/@s" class="stretched-link" /> 
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    img {
+        width: 100%;
+    }
+</style>
+
+    @code {
+    private List<string> _randoStrings = new List<string>();
+    protected override void OnInitialized()
+    {
+        _randoStrings = new List<string>()
+        {
+            "njksaasknasndlkn",
+            "asjlkdasdjjlk",
+            "njsajkjnasdnk",
+            "just another random string omegalul"
+        };
+    }
+}

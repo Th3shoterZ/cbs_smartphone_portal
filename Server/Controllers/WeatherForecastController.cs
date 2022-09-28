@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartphonePortal_WV.Shared;
+using SmartphonePortal_WV.Shared.ViewModels;
 
 namespace SmartphonePortal_WV.Server.Controllers
 {
