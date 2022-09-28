@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartphonePortal_WV_KW.Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartphonePortal_WV_KW.Shared", "Shared\SmartphonePortal_WV_KW.Shared.csproj", "{CFCB7121-D375-43DC-898C-DE94C7064A08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartphonePortal_WV_KW.core", "SmartphonePortal_WV.core\SmartphonePortal_WV_KW.core.csproj", "{CFE2D40C-21BC-49A2-B3D7-A6C5D118491F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartphonePortal_WV_KW.core", "SmartphonePortal_WV_KW.core\SmartphonePortal_WV_KW.core.csproj", "{D0763C4C-DF18-4D26-BD81-E27F54208652}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{CFCB7121-D375-43DC-898C-DE94C7064A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFCB7121-D375-43DC-898C-DE94C7064A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFCB7121-D375-43DC-898C-DE94C7064A08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CFE2D40C-21BC-49A2-B3D7-A6C5D118491F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFE2D40C-21BC-49A2-B3D7-A6C5D118491F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFE2D40C-21BC-49A2-B3D7-A6C5D118491F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFE2D40C-21BC-49A2-B3D7-A6C5D118491F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0763C4C-DF18-4D26-BD81-E27F54208652}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0763C4C-DF18-4D26-BD81-E27F54208652}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0763C4C-DF18-4D26-BD81-E27F54208652}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0763C4C-DF18-4D26-BD81-E27F54208652}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

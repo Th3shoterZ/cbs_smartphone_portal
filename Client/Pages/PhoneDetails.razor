@@ -1,4 +1,6 @@
 ﻿@page "/phone/{Id}"
+@inject HttpClient Http
+
 
 <h3>phonedetails</h3>
 
@@ -7,4 +9,15 @@
 @code {
     [Parameter]
     public string Id { get; set; }
+
+    private object SmartphoneDetails { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        GetSmartphoneDetails();
+    }
+    private async Task GetSmartphoneDetails()
+    {
+        SmartphoneDetails = await Http.GetFromJsonAsync<object>($"api/getsmartphonedetails?id={Id}");
+    }
 }

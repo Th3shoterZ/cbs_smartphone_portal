@@ -1,4 +1,4 @@
-namespace SmartphonePortal_WV.Shared.ViewModels
+namespace SmartphonePortal_WV_KW.Shared.ViewModels
 {
     public class WeatherForecast
     {

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using SmartphonePortal_WV.Server.Models;
+using SmartphonePortal_WV_KW.Server.Models;
 
-namespace SmartphonePortal_WV.Server.Data
+namespace SmartphonePortal_WV_KW.Server.Data
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {

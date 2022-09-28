@@ -1,6 +1,6 @@
-﻿using SmartphonePortal_WV.Shared.ViewModels;
+﻿using SmartphonePortal_WV_KW.Shared.ViewModels;
 
-namespace SmartphonePortal_WV.core.Services
+namespace SmartphonePortal_WV_KW.core.Services
 {
     public class SmartphoneService : ISmartphoneService
     {

@@ -1,4 +1,4 @@
-﻿namespace SmartphonePortal_WV.Client.Models
+﻿namespace SmartphonePortal_WV_KW.Client.Models
 {
     public class State
     {

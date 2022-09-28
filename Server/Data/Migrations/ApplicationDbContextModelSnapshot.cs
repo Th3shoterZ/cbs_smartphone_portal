@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SmartphonePortal_WV.Server.Data;
+using SmartphonePortal_WV_KW.Server.Data;
 using System;
 
 namespace SmartphonePortal_WV.Server.Data.Migrations

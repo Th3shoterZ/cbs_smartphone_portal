@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using SmartphonePortal_WV.core.Services;
-using SmartphonePortal_WV.Server.Data;
-using SmartphonePortal_WV.Server.Models;
+using SmartphonePortal_WV_KW.core.Services;
+using SmartphonePortal_WV_KW.Server.Data;
+using SmartphonePortal_WV_KW.Server.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +31,7 @@ builder.Services.AddRazorPages();
 #region DI
 
 builder.Services.AddTransient<ISmartphoneService, SmartphoneService>();
+builder.Services.AddTransient<ISmartphoneDetailsService, SmartphoneDetailsService>();
 
 #endregion
 

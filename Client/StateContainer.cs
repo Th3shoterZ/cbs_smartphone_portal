@@ -1,6 +1,6 @@
-﻿using SmartphonePortal_WV.Client.Models;
+﻿using SmartphonePortal_WV_KW.Client.Models;
 
-namespace SmartphonePortal_WV.Client
+namespace SmartphonePortal_WV_KW.Client
 {
     // TODO: does it notify when deep state gets modified?
     public class StateContainer

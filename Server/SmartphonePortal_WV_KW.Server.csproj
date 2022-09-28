@@ -15,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Client\SmartphonePortal_WV_KW.Client.csproj" />
     <ProjectReference Include="..\Shared\SmartphonePortal_WV_KW.Shared.csproj" />
-    <ProjectReference Include="..\SmartphonePortal_WV.core\SmartphonePortal_WV_KW.core.csproj" />
+    <ProjectReference Include="..\SmartphonePortal_WV_KW.core\SmartphonePortal_WV_KW.core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
