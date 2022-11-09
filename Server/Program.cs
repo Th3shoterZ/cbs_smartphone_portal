@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using SmartphonePortal_WV_KW.core.Services;
-using SmartphonePortal_WV_KW.Server.Data;
-using SmartphonePortal_WV_KW.Server.Models;
+using SmartphonePortal_Vervoort_Wagner.Server.Data;
+using SmartphonePortal_Vervoort_Wagner.Server.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-#region DB + Auth
-
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -23,17 +21,8 @@ builder.Services.AddIdentityServer()
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
-#endregion
-
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
-#region DI
-
-builder.Services.AddTransient<ISmartphoneService, SmartphoneService>();
-builder.Services.AddTransient<ISmartphoneDetailsService, SmartphoneDetailsService>();
-
-#endregion
 
 var app = builder.Build();
 

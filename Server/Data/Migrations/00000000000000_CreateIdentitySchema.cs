@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace SmartphonePortal_WV.Server.Data.Migrations
+namespace SmartphonePortal_Vervoort_Wagner.Server.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
@@ -58,7 +58,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Expiration = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 52110, nullable: false)
+                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 50950, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,7 +76,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
                     Algorithm = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     IsX509Certificate = table.Column<bool>(type: "bit", nullable: false),
                     DataProtected = table.Column<bool>(type: "bit", nullable: false),
-                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 52110, nullable: false)
+                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 50950, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,7 +96,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Expiration = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ConsumedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 52110, nullable: false)
+                    Data = table.Column<string>(type: "nvarchar(max)", maxLength: 50950, nullable: false)
                 },
                 constraints: table =>
                 {

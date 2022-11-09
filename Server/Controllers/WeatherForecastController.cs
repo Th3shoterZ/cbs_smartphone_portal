@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartphonePortal_WV_KW.Shared.ViewModels;
+using SmartphonePortal_Vervoort_Wagner.Shared;
 
-namespace SmartphonePortal_WV_KW.Server.Controllers
+namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers
 {
     [Authorize]
     [ApiController]

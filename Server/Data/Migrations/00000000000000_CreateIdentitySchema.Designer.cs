@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SmartphonePortal_WV_KW.Server.Data;
+using SmartphonePortal_Vervoort_Wagner.Server.Data;
 using System;
 
-namespace SmartphonePortal_WV.Server.Data.Migrations
+namespace SmartphonePortal_Vervoort_Wagner.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("00000000000000_CreateIdentitySchema")]
@@ -21,7 +21,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0-rc.1.20417.2");
 
-            modelBuilder.Entity("SmartphonePortal_WV.Server.Models.ApplicationUser", b =>
+            modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -102,7 +102,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
 
                     b.Property<string>("Data")
                         .IsRequired()
-                        .HasMaxLength(52110)
+                        .HasMaxLength(50950)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -153,7 +153,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
                     b.Property<string>("Data")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
-                        .HasMaxLength(52110);
+                        .HasMaxLength(50950);
 
                     b.Property<bool>("DataProtected")
                         .HasColumnType("bit");
@@ -194,7 +194,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
 
                     b.Property<string>("Data")
                         .IsRequired()
-                        .HasMaxLength(52110)
+                        .HasMaxLength(50950)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -376,7 +376,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SmartphonePortal_WV.Server.Models.ApplicationUser", null)
+                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -385,7 +385,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SmartphonePortal_WV.Server.Models.ApplicationUser", null)
+                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -400,7 +400,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SmartphonePortal_WV.Server.Models.ApplicationUser", null)
+                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -409,7 +409,7 @@ namespace SmartphonePortal_WV.Server.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SmartphonePortal_WV.Server.Models.ApplicationUser", null)
+                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

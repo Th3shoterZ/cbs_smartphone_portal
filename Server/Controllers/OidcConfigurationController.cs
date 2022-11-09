@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SmartphonePortal_WV_KW.Server.Controllers
+namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers
 {
     public class OidcConfigurationController : Controller
     {

@@ -1,7 +1,4 @@
 ﻿@page "/counter"
-@implements IDisposable
-@inject StateContainer StateContainer
-
 
 <PageTitle>Counter</PageTitle>
 
@@ -14,26 +11,8 @@
 @code {
     private int currentCount = 0;
 
-    protected override void OnInitialized()
-    {
-        StateContainer.OnChange += StateHasChanged;
-        currentCount = StateContainer.Property.Counter;
-    }
-
-    private void ChangePropertyValue()
-    {
-        StateContainer.Property.Counter = currentCount; 
-    }
-
-    public void Dispose()
-    {
-        StateContainer.OnChange -= StateHasChanged;
-    }
-
-
     private void IncrementCount()
     {
         currentCount++;
-        ChangePropertyValue();
     }
 }
