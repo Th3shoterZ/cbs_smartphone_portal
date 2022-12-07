@@ -365,3 +365,5 @@ FodyWeavers.xsd
 Server/appsettings.json
 
 Server/SmartphonePortal.db
+Server/SmartphonePortal.db-shm
+Server/SmartphonePortal.db-wal
