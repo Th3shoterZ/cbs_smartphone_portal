@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using SmartphonePortal_Vervoort_Wagner.Server.Data;
 using SmartphonePortal_Vervoort_Wagner.Server.Models;
 
@@ -37,6 +38,12 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+var serviceScope = app.Services.GetService<IServiceScopeFactory>()?.CreateScope();
+var context = serviceScope?.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+context?.Database.EnsureCreated();
+
+
 
 app.UseHttpsRedirection();
 

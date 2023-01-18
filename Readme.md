@@ -5,4 +5,5 @@ by Kevin Wagner and Wout Vervoort
 ### Setup instructions
 
 1. clone project
-2. run `Update-Database` in PacketManager Console
+2. copy appsettings.example.json and rename to appsettings.json
+3. run/debug app to create DB
