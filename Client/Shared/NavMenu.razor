@@ -1,39 +1,165 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">SmartphonePortal_Vervoort_Wagner</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<header class="sticky top-0 flex min-w-full flex-col items-center bg-black shadow">
+
+    <nav class="w-full bg-gradient-to-r from-sky-500 to-indigo-500">
+        <div class="px-4">
+            <div class="flex h-16 min-w-full justify-around">
+                <div class="flex grow">
+                    <div class="flex items-center">
+                        <a disabled class="text-2xl font-bold pointer-events-none" href="">Smartphone Portal</a>
+                    </div>
+
+                    <span class="grow"></span>
+
+                    @* Normal Desktop Navbar *@
+                    <div class="hidden divide-x text-center sm:-my-px sm:ml-10 sm:flex">
+                        <div class="my-auto">
+                            <NavLink class="m-auto mx-4 align-text-top relative inline-flex items-center after:h-0.5 after:-bottom-1 after:w-0 hover:after:w-full after:absolute after:bg-slate-700 after:left-0 after:right-0 after:mx-auto after:my-0 text-sm font-medium leading-5 text-white hover:text-black focus:outline-none focus:text-black focus:black after:transition-all after:duration-550 transition-all duration-250 ease-in-out"
+                                     href=""
+                                     Match="NavLinkMatch.All">
+                                Home
+                            </NavLink>
+                        </div>
+                        <div class="my-auto">
+                            <NavLink class="m-auto mx-4 align-text-top relative inline-flex items-center after:h-0.5 after:-bottom-1 after:w-0 hover:after:w-full after:absolute after:bg-slate-700 after:left-0 after:right-0 after:mx-auto after:my-0 text-sm font-medium leading-5 text-white hover:text-black focus:outline-none focus:text-black focus:black after:transition-all after:duration-550 transition-all duration-250 ease-in-out"
+                                     href="about"
+                                     Match="NavLinkMatch.All">
+                                About
+                            </NavLink>
+                        </div>
+                        <AuthorizeView Roles="Admin">
+                            <div class="my-auto">
+                                <NavLink class="m-auto mx-4 align-text-top relative inline-flex items-center after:h-0.5 after:-bottom-1 after:w-0 hover:after:w-full after:absolute after:bg-slate-700 after:left-0 after:right-0 after:mx-auto after:my-0 text-sm font-medium leading-5 text-white hover:text-black focus:outline-none focus:text-black focus:black after:transition-all after:duration-550 transition-all duration-250 ease-in-out"
+                                         href="admin"
+                                         Match="NavLinkMatch.All">
+                                    Admin
+                                </NavLink>
+                            </div>
+                        </AuthorizeView>
+
+
+                        <AuthorizeView>
+                            <Authorized>
+                                <div class="my-auto">
+                                    <a class="m-auto mx-4 relative align-text-top inline-flex items-center after:h-0.5 after:-bottom-1 after:w-0 hover:after:w-full after:absolute after:bg-slate-700 after:left-0 after:right-0 after:mx-auto after:my-0 text-sm font-medium leading-5 text-white hover:text-black focus:outline-none focus:text-black focus:black after:transition-all after:duration-550 transition-all duration-250 ease-in-out"
+                                       href="authentication/profile">
+                                        <i class="mr-2 fas fa-user-circle"></i>
+                                        Profile
+                                    </a>
+                                </div>
+                                <div class="my-auto">
+                                    <button class="m-auto mx-4 relative align-text-top inline-flex items-center after:h-0.5 after:-bottom-1 after:w-0 hover:after:w-full after:absolute after:bg-slate-700 after:left-0 after:right-0 after:mx-auto after:my-0 text-sm font-medium leading-5 text-white hover:text-black focus:outline-none focus:text-black focus:black after:transition-all after:duration-550 transition-all duration-250 ease-in-out"
+                                            @onclick="BeginSignOut">
+                                        Log out
+                                    </button>
+                                </div>
+                            </Authorized>
+                            <NotAuthorized>
+                                <div class="my-auto">
+                                    <a class="m-auto mx-4 align-text-top relative inline-flex items-center after:h-0.5 after:-bottom-1 after:w-0 hover:after:w-full after:absolute after:bg-slate-700 after:left-0 after:right-0 after:mx-auto after:my-0 text-sm font-medium leading-5 text-white hover:text-black focus:outline-none focus:text-black focus:black after:transition-all after:duration-550 transition-all duration-250 ease-in-out"
+                                       href="authentication/login">
+                                        Log in
+                                    </a>
+                                </div>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </div>
+                </div>
+
+                @* Hamburger *@
+                <div class="-mr-2 flex items-center sm:hidden">
+                    <button @onclick="ToggleNavMenu"
+                            class="inline-flex items-center justify-center rounded-md p-2 text-gray-900 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none">
+                        <svg class="h-6 w-6"
+                             stroke="currentColor"
+                             fill="none"
+                             viewBox="0 0 24 24">
+                            <path class="@(showingNavigationDropdown ? "hidden " : "inline-flex")"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M4 6h16M4 12h16M4 18h16" />
+                            <path class="@(showingNavigationDropdown ? "inline-flex" : "hidden")"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
+
+                    @* Dropdown Nav for mobile *@
+        <div>
+            <div class="sm:hidden transition @(showingNavigationDropdown ? "block" : "hidden")">
+                <div class="space-y-1 pt-2 pb-3">
+                    <NavLink class="block w-full pl-3 pr-4 py-2 border-l-4 border-transparent text-left text-base font-medium text-white hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out"
+                             href=""
+                             Match="NavLinkMatch.All"
+                             ActiveClass="responsive-active">
+                        Home
+                    </NavLink>
+                    <NavLink class="block w-full pl-3 pr-4 py-2 border-l-4 border-transparent text-left text-base font-medium text-white hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out"
+                             href="about"
+                             Match="NavLinkMatch.All"
+                             ActiveClass="responsive-active">
+                        About
+                    </NavLink>
+                    <AuthorizeView Roles="Admin">
+                        <NavLink class="block w-full pl-3 pr-4 py-2 border-l-4 border-transparent text-left text-base font-medium text-white hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out"
+                                 href="admin"
+                                 Match="NavLinkMatch.All"
+                                 ActiveClass="responsive-active">
+                            Admin
+                        </NavLink>
+                    </AuthorizeView>
+
+                    <AuthorizeView>
+                        <Authorized>
+                            <div class="divide-x divide-black">
+                                <a class="block w-full pl-3 pr-4 py-2 border-l-4 border-transparent text-left text-base font-medium text-white hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out"
+                                   href="authentication/profile">
+                                    <i class="mr-2 fas fa-user-circle"></i>
+                                    Profile
+                                </a>
+                                <button class="block w-full pl-3 pr-4 py-2 border-l-4 border-transparent text-left text-base font-medium text-white hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out"
+                                        @onclick="BeginSignOut">
+                                    Log out
+                                </button>
+                            </div>
+                        </Authorized>
+                        <NotAuthorized>
+                            <a class="block w-full pl-3 pr-4 py-2 border-l-4 border-transparent text-left text-base font-medium text-white hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out"
+                               href="authentication/login">
+                                Log in
+                            </a>
+                        </NotAuthorized>
+                    </AuthorizeView>
+
+                </div>
+            </div>
         </div>
     </nav>
-</div>
+</header>
 
 @code {
-    private bool collapseNavMenu = true;
+    private bool showingNavigationDropdown = false;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private void ToggleNavMenu()
+    private void ToggleNavMenu(MouseEventArgs args)
     {
-        collapseNavMenu = !collapseNavMenu;
+        showingNavigationDropdown = !showingNavigationDropdown;
+    }
+
+    private async Task BeginSignOut(MouseEventArgs args)
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
     }
 }

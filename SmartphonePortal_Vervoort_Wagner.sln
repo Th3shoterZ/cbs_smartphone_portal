@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartphonePortal_Vervoort_Wagner.Server", "Server\SmartphonePortal_Vervoort_Wagner.Server.csproj", "{DA741594-878A-4B08-86C9-4D46D88C0C27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartphonePortal_Vervoort_Wagner.Server", "Server\SmartphonePortal_Vervoort_Wagner.Server.csproj", "{DA741594-878A-4B08-86C9-4D46D88C0C27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartphonePortal_Vervoort_Wagner.Client", "Client\SmartphonePortal_Vervoort_Wagner.Client.csproj", "{BA709CBC-75DB-4617-BE94-5DE0AB6D0883}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartphonePortal_Vervoort_Wagner.Client", "Client\SmartphonePortal_Vervoort_Wagner.Client.csproj", "{BA709CBC-75DB-4617-BE94-5DE0AB6D0883}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartphonePortal_Vervoort_Wagner.Shared", "Shared\SmartphonePortal_Vervoort_Wagner.Shared.csproj", "{135C60D6-B5D4-45CF-8CC2-C1F4C44BBFFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartphonePortal_Vervoort_Wagner.Shared", "Shared\SmartphonePortal_Vervoort_Wagner.Shared.csproj", "{135C60D6-B5D4-45CF-8CC2-C1F4C44BBFFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
