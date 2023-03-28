@@ -11,14 +11,13 @@ using SmartphonePortal_Vervoort_Wagner.Server.Data;
 namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230118122403_CreateSmartphonePortalDB")]
-    partial class CreateSmartphonePortalDB
+    [Migration("20230327181922_Roles")]
+    partial class Roles
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.15");
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.DeviceFlowCodes", b =>
                 {
@@ -185,6 +184,22 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "96c1e8a0-8362-4ca1-a7e0-869d2d6631aa",
+                            ConcurrencyStamp = "a4815648-fd26-4528-9852-825c60b01e64",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "1dfc233e-b290-4a31-a788-172533af29a4",
+                            ConcurrencyStamp = "60c4fb75-086f-489b-ab07-8ea8e64434cf",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

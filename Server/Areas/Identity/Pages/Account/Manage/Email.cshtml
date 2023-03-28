@@ -1,0 +1,56 @@
+﻿@page
+@model EmailModel
+@{
+    ViewData["Title"] = "Manage Email";
+    ViewData["ActivePage"] = ManageNavPages.Email;
+}
+
+<div class="mt-10 max-w-md mx-auto">
+    <h3 class="font-bold text-3xl">@ViewData["Title"]</h3>
+    <hr />
+</div>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="mt-10 max-w-md mx-auto">
+    <div class="max-w-1/2">
+        <form id="email-form" method="post">
+            <div asp-validation-summary="All" class="text-sm text-red-600"></div>
+            @if (Model.IsEmailConfirmed)
+            {
+                <div class="flex flex-col my-2">
+                    <label asp-for="Email" class="font-bold"></label>
+                    <div class="flex">
+                        <input asp-for="Email" class="grow px-2 border border-gray-800 bg-gray-100 rounded h-10" disabled />
+                        <div class="ml-2 shrink my-auto">
+                            <span class="">✓</span>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="flex flex-col my-2">
+                    <label asp-for="Email" class="font-bold"></label>
+                    <input asp-for="Email" class="px-2 border border-gray-800 rounded h-10" disabled />
+                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                </div>
+            }
+            <div class="flex flex-col my-2">
+                <label asp-for="Input.NewEmail" class="font-bold"></label>
+                <input asp-for="Input.NewEmail" class="px-2 border border-gray-800 rounded h-10" autocomplete="email" aria-required="true" />
+                <span asp-validation-for="Input.NewEmail" class="text-sm text-red-600"></span>
+            </div>
+            <div class="mt-2 text-right">
+                <button class="w-32 text-sm text-white font-bold h-10 bg-sky-500 hover:bg-indigo-500 transition uppercase sm:rounded rounded-lg"
+                        id="change-email-button"
+                        type="submit"
+                        asp-page-handler="ChangeEmail">
+                    Change email
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

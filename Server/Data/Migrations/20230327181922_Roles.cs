@@ -4,10 +4,8 @@
 
 namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
 {
-    /// <inheritdoc />
-    public partial class CreateSmartphonePortalDB : Migration
+    public partial class Roles : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -191,6 +189,16 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "1dfc233e-b290-4a31-a788-172533af29a4", "60c4fb75-086f-489b-ab07-8ea8e64434cf", "Admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "96c1e8a0-8362-4ca1-a7e0-869d2d6631aa", "a4815648-fd26-4528-9852-825c60b01e64", "User", "USER" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_UserId",
                 table: "Comments",
@@ -238,7 +246,6 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                 column: "UserId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -264,6 +271,16 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Smartphones");
+
+            migrationBuilder.DeleteData(
+                table: "AspNetRoles",
+                keyColumn: "Id",
+                keyValue: "1dfc233e-b290-4a31-a788-172533af29a4");
+
+            migrationBuilder.DeleteData(
+                table: "AspNetRoles",
+                keyColumn: "Id",
+                keyValue: "96c1e8a0-8362-4ca1-a7e0-869d2d6631aa");
         }
     }
 }

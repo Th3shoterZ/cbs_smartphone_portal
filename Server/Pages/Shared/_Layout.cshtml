@@ -65,18 +65,6 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="w-full absolute bottom-0 mb-4 pt-4 mx-auto border-top pl-4 overflow-hidden">
-        <div class="mx-auto">
-            &copy; 2023 - SmartphonePortal
-            @{
-                var foundPrivacy = Url.Page("/Privacy", new { area = "" });
-            }
-            @if (foundPrivacy != null)
-            {
-                <a asp-area="" asp-page="/Privacy">Privacy</a>
-            }
-        </div>
-    </footer>
 
     <environment include="Development">
         <script src="~/Identity/lib/jquery/dist/jquery.js"></script>

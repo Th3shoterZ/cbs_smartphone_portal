@@ -1,6 +1,10 @@
 ﻿@page "/admin"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
 
-<h3>Admin</h3>
+<div class="mt-10">
+    <h3 class="text-3xl">Admin</h3>
+</div>
 
 @code {
 

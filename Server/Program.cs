@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using SmartphonePortal_Vervoort_Wagner.Server.Data;
 using SmartphonePortal_Vervoort_Wagner.Server.Models;
 using Microsoft.AspNetCore.Identity;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +13,27 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+// add IdentityRole to use Roles
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+})
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+.AddApiAuthorization<ApplicationUser, ApplicationDbContext>(options =>
+{
+    options.IdentityResources["openid"].UserClaims.Add("role");
+    options.ApiResources.Single().UserClaims.Add("role");
+});
 
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 

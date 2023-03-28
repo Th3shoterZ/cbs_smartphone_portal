@@ -1,7 +1,22 @@
 ﻿@page "/authentication/{action}"
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-<RemoteAuthenticatorView Action="@Action" />
+@using SmartphonePortal_Vervoort_Wagner.Client.Partials
+@inject NavigationManager navigationManager
 
-@code{
+<RemoteAuthenticatorView Action="@Action">
+    <LogOutSucceeded>
+        @InvokeAsync(() => navigationManager.NavigateTo("/"))
+    </LogOutSucceeded>
+    <LoggingIn>
+        <Loader></Loader>
+    </LoggingIn>
+    <CompletingLoggingIn>
+        <Loader></Loader>
+    </CompletingLoggingIn>
+    <LogOut>
+        <Loader></Loader>
+    </LogOut>
+</RemoteAuthenticatorView>
+@code {
     [Parameter] public string? Action { get; set; }
 }

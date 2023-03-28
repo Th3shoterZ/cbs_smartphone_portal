@@ -95,7 +95,7 @@
             </div>
         </div>
 
-                    @* Dropdown Nav for mobile *@
+        @* Dropdown Nav for mobile *@
         <div>
             <div class="sm:hidden transition @(showingNavigationDropdown ? "block" : "hidden")">
                 <div class="space-y-1 pt-2 pb-3">
@@ -150,7 +150,6 @@
 
 @code {
     private bool showingNavigationDropdown = false;
-
 
     private void ToggleNavMenu(MouseEventArgs args)
     {

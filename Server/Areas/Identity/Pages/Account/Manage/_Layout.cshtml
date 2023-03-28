@@ -1,0 +1,31 @@
+﻿@{
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
+    {
+        Layout = parentLayout.ToString();
+    }
+    else
+    {
+        Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+    }
+}
+
+<div class="mt-10 max-w-md mx-auto">
+    <h1 class="font-bold text-3xl">Manage your account</h1>
+    <hr />
+</div>
+<div class="relative">
+    <div class="absolute">
+        <partial name="_ManageNav" />
+    </div>
+    <div class="mt-10 max-w-md mx-auto">
+        <div class="max-w-1/2">
+            <div class="">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}
