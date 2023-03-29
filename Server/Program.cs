@@ -72,9 +72,11 @@ app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
-app.MapRazorPages();
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+    endpoints.MapControllers();
+});
 app.MapFallbackToFile("index.html");
 
 app.Run();

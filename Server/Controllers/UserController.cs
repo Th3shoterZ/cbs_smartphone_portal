@@ -4,18 +4,21 @@ using SmartphonePortal_Vervoort_Wagner.Server.Models;
 
 namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 
-public class UserController : ControllerBase
+[ApiController]
+[Route("[controller]")]
+public class ProfileController : ControllerBase
 {
-    private Applicato
-    public UserController(ApplicationDbContext dbContext)
+    private readonly ApplicationDbContext _dbContext;
+    public ProfileController(ApplicationDbContext dbContext)
     {
-        
+        _dbContext = dbContext;
     }
 
     [HttpGet]
-    public async Task<ActionResult> GetProfile(int profileId)
+    [Route("{profileId}")]
+    public ActionResult<ApplicationUser> GetProfile(string profileId)
     {
-        
-        return Ok(new ApplicationUser());
+        ApplicationUser user = _dbContext.Users.Where(x  => x.Id.Equals(profileId)).Single<ApplicationUser>();
+        return Ok(user);
     }
 }
