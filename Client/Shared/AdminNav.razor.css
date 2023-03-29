@@ -1,0 +1,13 @@
+﻿::deep a.active {
+    color: black;
+}
+
+    ::deep a.active::after {
+        width: 100%;
+    }
+
+::deep a.responsive-active {
+    color: black;
+    border-color: rgb(51 65 85);
+    background-color: white;
+}

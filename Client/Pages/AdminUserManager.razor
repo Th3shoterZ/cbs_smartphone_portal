@@ -1,12 +1,13 @@
-﻿@page "/admin"
+﻿@page "/admin/usermanager"
 @using Microsoft.AspNetCore.Authorization
-@using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @attribute [Authorize(Roles = "Admin")]
+
 @layout AdminLayout
+
 
 <div class="max-w-lg mx-auto">
     <div class="mt-10">
-        <h3 class="text-3xl">Admin</h3>
+        <h3 class="text-3xl">User Manager</h3>
         <hr />
     </div>
 </div>
