@@ -17,9 +17,9 @@ public class ProfileController : ControllerBase
     private readonly IUserEmailStore<ApplicationUser> _emailStore;
 
     public ProfileController(
-        ApplicationDbContext dbContext,
-        UserManager<ApplicationUser> userManager,
-        IUserStore<ApplicationUser> userStore)
+    ApplicationDbContext dbContext,
+    UserManager<ApplicationUser> userManager,
+    IUserStore<ApplicationUser> userStore)
     {
         _dbContext = dbContext;
         _userManager = userManager;
@@ -27,6 +27,11 @@ public class ProfileController : ControllerBase
         _emailStore = (IUserEmailStore<ApplicationUser>)userStore;
     }
 
+    /// <summary>
+    /// Get a user profile by Id
+    /// </summary>
+    /// <param name="profileId"></param>
+    /// <returns></returns>
     [HttpGet]
     [Route("{profileId}")]
     public ActionResult<ApplicationUser> GetProfile(string profileId)
@@ -42,6 +47,10 @@ public class ProfileController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get all user profiles
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [Route("all")]
     public ActionResult<List<ApplicationUser>> GetAllProfiles()
@@ -56,6 +65,11 @@ public class ProfileController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Create a user profile
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("create")]
     public async Task<IActionResult> CreateProfile(UserCreationRequest request)

@@ -6,15 +6,21 @@ using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using SmartphonePortal_Vervoort_Wagner.Server.Mappers;
 using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#region DB connection
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+#endregion
+
+#region Identity Server And Auth
 // add IdentityRole to use Roles
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
@@ -39,12 +45,31 @@ JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
+#endregion
+
+// mvc things
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRazorPages();
 
-builder.Services.AddSwaggerGen();
+// swagger stuff
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Smartphone Portal API",
+        Description = "API for our Smartphone Portal application"
+    });
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
+
+#region Dependency Injection
+
 builder.Services.AddTransient<IMapper<Processor, ProcessorViewModel>, ProcessorMapper>();
+
+#endregion
 
 var app = builder.Build();
 
@@ -61,20 +86,17 @@ else
     app.UseHsts();
 }
 
-app.UseSwagger(options =>
-{
-});
+// more swagger stuff
+app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    //options.RoutePrefix = string.Empty
 });
 
+#region Middleware and what not
 var serviceScope = app.Services.GetService<IServiceScopeFactory>()?.CreateScope();
 var context = serviceScope?.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 context?.Database.EnsureCreated();
-
-
 
 app.UseHttpsRedirection();
 
@@ -93,5 +115,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 app.MapFallbackToFile("index.html");
+
+#endregion
 
 app.Run();

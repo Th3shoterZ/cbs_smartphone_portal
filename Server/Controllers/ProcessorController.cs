@@ -13,6 +13,7 @@ public class ProcessorController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper<Processor, ProcessorViewModel> _mapper;
+    
     public ProcessorController(
         ApplicationDbContext dbContext,
         IMapper<Processor, ProcessorViewModel> mapper)
@@ -21,6 +22,11 @@ public class ProcessorController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Get a processor by Id
+    /// </summary>
+    /// <param name="processorId"></param>
+    /// <returns></returns>
     [HttpGet]
     [Route("{processorId}")]
     public ActionResult<Processor> GetProcessor(int processorId)
@@ -37,6 +43,10 @@ public class ProcessorController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get all processors
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [Route("all")]
     public ActionResult<List<Processor>> GetAllProcessors()
@@ -52,6 +62,11 @@ public class ProcessorController : ControllerBase
 
     }
 
+    /// <summary>
+    /// Create a processor
+    /// </summary>
+    /// <param name="processorViewModel"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("create")]
     public ActionResult CreateProcessor([FromBody]ProcessorViewModel processorViewModel)
