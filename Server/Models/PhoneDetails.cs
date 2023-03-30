@@ -9,7 +9,8 @@ public class PhoneDetails
     public string? Resolution { get; set; }
     public double Weight { get; set; }
     public int SmartphoneId { get; set; } 
-    public List<PhoneDetailsProcessor>? PhoneDetailsProcessors { get; set; }
+    public int ProcessorId { get; set; }
+    public Processor? Processor { get; set; }
     public List<Picture>? Pictures { get; set; }
     public Smartphone? Smartphone { get; set; }
 }

@@ -44,13 +44,15 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Data
                 .WithOne(r => r.Smartphone)
                 .HasForeignKey(r => r.SmartphoneId);
 
-            builder.Entity<PhoneDetailsProcessor>()
-                .HasKey(pdp => new { pdp.ProcessorId, pdp.PhoneDetailsId });
-
             builder.Entity<PhoneDetails>()
                 .HasMany<Picture>(pd => pd.Pictures)
                 .WithOne(p => p.PhoneDetails)
                 .HasForeignKey(p => p.PhoneDetailsId);
+
+            builder.Entity<Processor>()
+               .HasMany<PhoneDetails>(p => p.PhoneDetails)
+               .WithOne(p => p.Processor)
+               .HasForeignKey(p => p.PhoneDetailsId);
 
             builder.Entity<ApplicationUser>()
                 .HasMany<Rating>(u => u.Ratings)
@@ -80,7 +82,6 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Data
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<PhoneDetailsProcessor> PhoneDetailsProcessors { get; set; }
         public new virtual DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
     }
 }

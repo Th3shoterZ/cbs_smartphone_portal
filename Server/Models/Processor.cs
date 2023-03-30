@@ -6,5 +6,5 @@ public class Processor
     public string? Gigaherz { get; set; }
     public int CoreCount { get; set; }
     public string? Title { get; set; }
-    public List<PhoneDetailsProcessor> PhoneDetailsProcessor { get; set; } = new();
+    public List<PhoneDetails>? PhoneDetails { get; set; }
 }

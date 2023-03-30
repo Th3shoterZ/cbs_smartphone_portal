@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using SmartphonePortal_Vervoort_Wagner.Server.Data;
 using SmartphonePortal_Vervoort_Wagner.Server.Models;
+using SmartphonePortal_Vervoort_Wagner.Shared.Requests;
 
 namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 
@@ -9,16 +12,66 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 public class ProfileController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
-    public ProfileController(ApplicationDbContext dbContext)
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUserStore<ApplicationUser> _userStore;
+    private readonly IUserEmailStore<ApplicationUser> _emailStore;
+
+    public ProfileController(
+        ApplicationDbContext dbContext,
+        UserManager<ApplicationUser> userManager,
+        IUserStore<ApplicationUser> userStore)
     {
         _dbContext = dbContext;
+        _userManager = userManager;
+        _userStore = userStore;
+        _emailStore = (IUserEmailStore<ApplicationUser>)userStore;
     }
 
     [HttpGet]
     [Route("{profileId}")]
     public ActionResult<ApplicationUser> GetProfile(string profileId)
     {
-        ApplicationUser user = _dbContext.Users.Where(x  => x.Id.Equals(profileId)).Single<ApplicationUser>();
-        return Ok(user);
+        try
+        {
+            ApplicationUser? user = _dbContext.Users.FirstOrDefault(x => x.Id == profileId);
+            return Ok(user);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("all")]
+    public ActionResult<List<ApplicationUser>> GetAllProfiles()
+    {
+        try
+        {
+            return Ok(_dbContext.Users);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    [Route("create")]
+    public async Task<IActionResult> CreateProfile(UserCreationRequest request)
+    {
+        try
+        {
+            var user = Activator.CreateInstance<ApplicationUser>();
+
+            await _userStore.SetUserNameAsync(user, request.Email, CancellationToken.None);
+            await _emailStore.SetEmailAsync(user, request.Email, CancellationToken.None);
+            var result = await _userManager.CreateAsync(user, request.Password);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

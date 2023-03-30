@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 
-namespace SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
-
-public class User
+public class UserViewModel
 {
     public string? Id { get; set; }
     public string? UserName { get; set; }

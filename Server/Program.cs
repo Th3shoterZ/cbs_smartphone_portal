@@ -4,6 +4,8 @@ using SmartphonePortal_Vervoort_Wagner.Server.Data;
 using SmartphonePortal_Vervoort_Wagner.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
+using SmartphonePortal_Vervoort_Wagner.Server.Mappers;
+using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +40,11 @@ builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRazorPages();
+
+builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<IMapper<Processor, ProcessorViewModel>, ProcessorMapper>();
 
 var app = builder.Build();
 
@@ -54,6 +60,15 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseSwagger(options =>
+{
+});
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    //options.RoutePrefix = string.Empty
+});
 
 var serviceScope = app.Services.GetService<IServiceScopeFactory>()?.CreateScope();
 var context = serviceScope?.ServiceProvider.GetRequiredService<ApplicationDbContext>();
