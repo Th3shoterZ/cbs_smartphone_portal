@@ -8,11 +8,11 @@ using SmartphonePortal_Vervoort_Wagner.Server.Data;
 
 #nullable disable
 
-namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
+namespace SmartphonePortal_Vervoort_Wagner.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230330185327_changeProcessor")]
-    partial class changeProcessor
+    [Migration("20230410131557_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -188,17 +188,17 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "922b5b33-037c-4464-8aab-81ff3e713799",
-                            ConcurrencyStamp = "f71e3ef0-bf95-4017-b283-2a5d655091ad",
+                            Id = "82e2ee38-de23-455b-ae52-5b52c9eeed2e",
+                            ConcurrencyStamp = "772ce6ca-8d03-49fb-bc0b-b79022001440",
                             Name = "User",
-                            NormalizedName = "USER"
+                            NormalizedName = "43e52d7f-6efd-43d4-a4bc-d9e4cb606039"
                         },
                         new
                         {
-                            Id = "f2a0de3d-a50d-408e-bb3e-7f66ac0df295",
-                            ConcurrencyStamp = "7fed8674-a5a4-4a44-943a-bdb99cfcf8d9",
+                            Id = "d88e5cd2-b06c-4166-87a9-43f686bf6f50",
+                            ConcurrencyStamp = "26232860-5177-478c-a731-438413c1ccc2",
                             Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            NormalizedName = "e1203b39-c60c-425e-9e39-c54b62fc166d"
                         });
                 });
 
@@ -372,15 +372,32 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Comment", b =>
                 {
                     b.Property<int>("CommentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("CommentId");
@@ -390,38 +407,27 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.PhoneDetails", b =>
+            modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Manufacturer", b =>
                 {
-                    b.Property<int>("PhoneDetailsId")
+                    b.Property<int>("ManufacturerId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("DisplaySize")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("ManufacturorInfo")
+                    b.Property<string>("LinkToHomePage")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProcessorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Resolution")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("SmartphoneId")
-                        .HasColumnType("INTEGER");
+                    b.HasKey("ManufacturerId");
 
-                    b.Property<double>("Weight")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("PhoneDetailsId");
-
-                    b.HasIndex("SmartphoneId")
-                        .IsUnique();
-
-                    b.ToTable("PhoneDetails");
+                    b.ToTable("Manufacturers");
                 });
 
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Picture", b =>
@@ -431,17 +437,19 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PathToData")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PhoneDetailsId")
+                    b.Property<int>("SmartphoneId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("PictureId");
 
-                    b.HasIndex("PhoneDetailsId");
+                    b.HasIndex("SmartphoneId");
 
                     b.ToTable("Pictures");
                 });
@@ -456,9 +464,11 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Gigaherz")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ProcessorId");
@@ -469,10 +479,6 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Rating", b =>
                 {
                     b.Property<int>("RatingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ReviewId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("SmartphoneId")
@@ -482,11 +488,10 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("RatingId");
-
-                    b.HasIndex("ReviewId");
 
                     b.HasIndex("SmartphoneId");
 
@@ -505,12 +510,15 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ReviewId");
@@ -524,17 +532,44 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
 
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Smartphone", b =>
                 {
-                    b.Property<int?>("SmartphoneId")
+                    b.Property<int>("SmartphoneId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("DisplaySize")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("ManufacturerId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ProcessorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Resolution")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Weight")
+                        .HasColumnType("REAL");
+
                     b.HasKey("SmartphoneId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("ManufacturerId");
+
+                    b.HasIndex("ProcessorId");
 
                     b.ToTable("Smartphones");
                 });
@@ -600,48 +635,33 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
 
                     b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.ApplicationUser", "User")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Review");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.PhoneDetails", b =>
-                {
-                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.Processor", "Processor")
-                        .WithMany("PhoneDetails")
-                        .HasForeignKey("PhoneDetailsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.Smartphone", "Smartphone")
-                        .WithOne("PhoneDetails")
-                        .HasForeignKey("SmartphonePortal_Vervoort_Wagner.Server.Models.PhoneDetails", "SmartphoneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Processor");
-
-                    b.Navigation("Smartphone");
-                });
-
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Picture", b =>
                 {
-                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.PhoneDetails", "PhoneDetails")
+                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.Smartphone", "Smartphone")
                         .WithMany("Pictures")
-                        .HasForeignKey("PhoneDetailsId")
+                        .HasForeignKey("SmartphoneId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PhoneDetails");
+                    b.Navigation("Smartphone");
                 });
 
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Rating", b =>
                 {
                     b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.Review", "Review")
                         .WithMany("Ratings")
-                        .HasForeignKey("ReviewId");
+                        .HasForeignKey("RatingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.Smartphone", "Smartphone")
                         .WithMany("Ratings")
@@ -651,7 +671,9 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
 
                     b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.ApplicationUser", "User")
                         .WithMany("Ratings")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Review");
 
@@ -670,11 +692,40 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
 
                     b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.ApplicationUser", "User")
                         .WithMany("Reviews")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Smartphone");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Smartphone", b =>
+                {
+                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.Category", "Category")
+                        .WithMany("Smartphones")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.Manufacturer", "Manufacturer")
+                        .WithMany("Smartphones")
+                        .HasForeignKey("ManufacturerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.Processor", "Processor")
+                        .WithMany("Smartphones")
+                        .HasForeignKey("ProcessorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Manufacturer");
+
+                    b.Navigation("Processor");
                 });
 
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.ApplicationUser", b =>
@@ -686,14 +737,19 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.PhoneDetails", b =>
+            modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Category", b =>
                 {
-                    b.Navigation("Pictures");
+                    b.Navigation("Smartphones");
+                });
+
+            modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Manufacturer", b =>
+                {
+                    b.Navigation("Smartphones");
                 });
 
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Processor", b =>
                 {
-                    b.Navigation("PhoneDetails");
+                    b.Navigation("Smartphones");
                 });
 
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Review", b =>
@@ -705,7 +761,7 @@ namespace SmartphonePortalVervoortWagner.Server.Data.Migrations
 
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Smartphone", b =>
                 {
-                    b.Navigation("PhoneDetails");
+                    b.Navigation("Pictures");
 
                     b.Navigation("Ratings");
 

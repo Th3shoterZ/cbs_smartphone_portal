@@ -1,0 +1,168 @@
+﻿@page "/admin/users"
+@using Microsoft.AspNetCore.Authorization
+@using SmartphonePortal_Vervoort_Wagner.Client.Partials
+@using SmartphonePortal_Vervoort_Wagner.Client.Partials.User
+@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
+@attribute [Authorize(Roles = "Admin")]
+@inject HttpClient Client;
+
+@layout AdminLayout
+
+
+<div class="max-w-2xl mx-auto">
+    <div class="mt-10">
+        <h3 class="text-3xl">Users</h3>
+        <hr />
+    </div>
+
+    <div class="mt-10">
+        @if (IsDataFetched)
+        {
+            @if (!string.IsNullOrEmpty(Error))
+            {
+                <div class="flex h-20 bg-red-100 rounded-lg text-center text-xl font-bold my-5">
+                    <p class="m-2">
+                        @Error
+                    </p>
+                </div>
+            }
+
+            @if (IsEditModalOpen)
+            {
+                <UserEditModal OnClose="@OnEditModalClose" Roles="@Roles" Profile="ProfileToEdit" />
+            }
+            @if (IsAddModalOpen)
+            {
+                <UserAddModal OnClose="@OnAddModalClose" Roles="@Roles" />
+            }
+            @if (IsDeleteModalOpen)
+            {
+                <UserDeleteModal OnClose="@OnDeleteModalClose" Profile="ProfileToDelete" />
+            }
+
+
+            <div class="divide-y">
+
+                <div class="grid grid-cols-12 divide-x overflow-hidden font-bold">
+                    <div class="h-10 px-2 pt-2 overflow-hidden col-span-2">
+                        Id
+                    </div>
+                    <div class="h-10 px-2 pt-2 col-span-4">
+                        E-Mail
+                    </div>
+                    <div class="h-10 px-2 pt-2 col-span-4">
+                        Roles
+                    </div>
+                    <div class="h-10 text-center flex justify-center col-span-2">
+                        <button class="w-full hover:bg-green-300"
+                            @onclick=@OpenAddModal>
+                            <i class="fa-solid fa-square-plus fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                @foreach (var user in Profiles)
+                {
+                    <div class="grid grid-cols-12 divide-x overflow-hidden">
+                        <div class="h-10 px-2 pt-2 overflow-hidden col-span-2">
+                            @user.Id.Substring(0,5)
+                            ...
+                        </div>
+                        <div class="h-10 px-2 pt-2 col-span-4">
+                            @user.UserName
+                        </div>
+                        <div class="h-10 px-2 pt-2 col-span-4">
+                            @user.Role
+                        </div>
+                        <div class="flex h-10 divide-x  col-span-2">
+                            <button class="flex-1 hover:bg-sky-400 focus:bg-sky-400 transition ease-in-out" @onclick="() => OpenEditModal(user)"><i class="fa-solid fa-pen"></i></button>
+                            <button class="flex-1 hover:bg-red-400 focus:bg-red-400 transition ease-in-out" @onclick="() => OpenDeleteModal(user)"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <Loader />
+        }
+        <hr />
+    </div>
+</div>
+
+@code {
+    public List<ProfileViewModel> Profiles { get; set; } = new();
+    public bool IsDataFetched { get; set; } = false;
+    public string Error { get; set; } = string.Empty;
+    public bool IsEditModalOpen { get; set; }
+    public bool IsAddModalOpen { get; set; }
+    public bool IsDeleteModalOpen { get; set; }
+
+    public List<string> Roles { get; set; } = new() { "User", "Admin" };
+
+    public ProfileViewModel ProfileToEdit { get; set; } = new();
+    public ProfileViewModel ProfileToDelete { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchUsers();
+        await base.OnInitializedAsync();
+    }
+
+
+    // Edit User Modal handling
+    public async void OnEditModalClose()
+    {
+        IsEditModalOpen = false;
+        await FetchUsers();
+    }
+    public void OpenEditModal(ProfileViewModel user)
+    {
+        ProfileToEdit = user;
+        IsEditModalOpen = true;
+        return;
+    }
+
+    // Add User Modal handling
+    public async void OnAddModalClose()
+    {
+        IsAddModalOpen = false;
+        await FetchUsers();
+    }
+    public void OpenAddModal()
+    {
+        IsAddModalOpen = true;
+        return;
+    }
+
+    // Delete User Modal handling
+    public async void OnDeleteModalClose()
+    {
+        IsDeleteModalOpen = false;
+        await FetchUsers();
+    }
+    public void OpenDeleteModal(ProfileViewModel user)
+    {
+        ProfileToDelete = user;
+        IsDeleteModalOpen = true;
+        return;
+    }
+
+
+    private async Task FetchUsers()
+    {
+        try
+        {
+            Profiles = await Client.GetFromJsonAsync<List<ProfileViewModel>>("/Profile/all") ?? new();
+            this.StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            // idk
+            Error = "Some Error occurred: " + ex.Message;
+        }
+        finally
+        {
+            IsDataFetched = true;
+        }
+    }
+}

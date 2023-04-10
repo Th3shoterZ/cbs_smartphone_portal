@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SmartphonePortal_Vervoort_Wagner.Server.Data;
+using SmartphonePortal_Vervoort_Wagner.Server.Interfaces;
 using SmartphonePortal_Vervoort_Wagner.Server.Mappers;
 using SmartphonePortal_Vervoort_Wagner.Server.Models;
+using SmartphonePortal_Vervoort_Wagner.Shared.Requests;
 using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 
 namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
@@ -11,15 +13,11 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 [Route("[controller]")]
 public class ProcessorController : ControllerBase
 {
-    private readonly ApplicationDbContext _dbContext;
-    private readonly IMapper<Processor, ProcessorViewModel> _mapper;
-    
-    public ProcessorController(
-        ApplicationDbContext dbContext,
-        IMapper<Processor, ProcessorViewModel> mapper)
+    private readonly IProcessorService _processorService;
+
+    public ProcessorController(IProcessorService processorService)
     {
-        _dbContext = dbContext;
-        _mapper = mapper;
+        _processorService = processorService;
     }
 
     /// <summary>
@@ -29,12 +27,12 @@ public class ProcessorController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Route("{processorId}")]
-    public ActionResult<Processor> GetProcessor(int processorId)
+    public ActionResult<ProcessorViewModel> GetProcessor(int processorId)
     {
         try
         {
-            Processor processor = _dbContext.Processors.Where(x => x.ProcessorId == processorId).Single();
-            return Ok(processor);
+            ProcessorViewModel result = _processorService.GetProcessorById(processorId);
+            return Ok(result);
 
         }
         catch (Exception ex)
@@ -49,11 +47,12 @@ public class ProcessorController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Route("all")]
-    public ActionResult<List<Processor>> GetAllProcessors()
+    public ActionResult<List<ProcessorViewModel>> GetAllProcessors()
     {
         try
         {
-            return Ok(_dbContext.Processors);
+            var result = _processorService.GetAllProcessors();
+            return Ok(result);
         }
         catch (Exception ex)
         {
@@ -65,16 +64,55 @@ public class ProcessorController : ControllerBase
     /// <summary>
     /// Create a processor
     /// </summary>
-    /// <param name="processorViewModel"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
     [Route("create")]
-    public ActionResult CreateProcessor([FromBody]ProcessorViewModel processorViewModel)
+    public async Task<ActionResult> CreateProcessor(ProcessorCreationRequest request)
     {
         try
         {
-            _dbContext.Processors.Add(_mapper.MapToModel(processorViewModel));
-            _dbContext.SaveChanges();
+            await _processorService.CreateProcessor(request);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Update a processor
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("update")]
+    public async Task<ActionResult> UpdateProcessor(ProcessorUpdateRequest request)
+    {
+        try
+        {
+            await _processorService.UpdateProcessor(request);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Delete a processor
+    /// </summary>
+    /// <param name="processorId"></param>
+    /// <returns></returns>
+    [HttpDelete]
+    [Route("{processorId}")]
+    public async Task<ActionResult> DeleteProcessor(int processorId)
+    {
+        try
+        {
+            await _processorService.DeleteProcessor(processorId);
             return Ok();
         }
         catch (Exception ex)

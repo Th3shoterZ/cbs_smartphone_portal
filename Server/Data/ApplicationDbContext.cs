@@ -30,11 +30,6 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Data
             builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Admin", NormalizedName = "ADMIN", Id = Guid.NewGuid().ToString(), ConcurrencyStamp = Guid.NewGuid().ToString() });
 
             builder.Entity<Smartphone>()
-                .HasOne<PhoneDetails>(s => s.PhoneDetails)
-                .WithOne(i => i.Smartphone)
-                .HasForeignKey<PhoneDetails>(p => p.SmartphoneId);
-
-            builder.Entity<Smartphone>()
                 .HasMany<Review>(s => s.Reviews)
                 .WithOne(r => r.Smartphone)
                 .HasForeignKey(r => r.SmartphoneId);
@@ -44,15 +39,25 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Data
                 .WithOne(r => r.Smartphone)
                 .HasForeignKey(r => r.SmartphoneId);
 
-            builder.Entity<PhoneDetails>()
+            builder.Entity<Smartphone>()
                 .HasMany<Picture>(pd => pd.Pictures)
-                .WithOne(p => p.PhoneDetails)
-                .HasForeignKey(p => p.PhoneDetailsId);
+                .WithOne(p => p.Smartphone)
+                .HasForeignKey(p => p.SmartphoneId);
 
-            builder.Entity<Processor>()
-               .HasMany<PhoneDetails>(p => p.PhoneDetails)
-               .WithOne(p => p.Processor)
-               .HasForeignKey(p => p.PhoneDetailsId);
+            builder.Entity<Smartphone>()
+               .HasOne<Processor>(sm => sm.Processor)
+               .WithMany(p => p.Smartphones)
+               .HasForeignKey(sm => sm.ProcessorId);
+
+            builder.Entity<Smartphone>()
+               .HasOne<Category>(sm => sm.Category)
+               .WithMany(c => c.Smartphones)
+               .HasForeignKey(sm => sm.CategoryId);
+
+            builder.Entity<Smartphone>()
+              .HasOne<Manufacturer>(sm => sm.Manufacturer)
+               .WithMany(m => m.Smartphones)
+               .HasForeignKey(sm => sm.ManufacturerId);
 
             builder.Entity<ApplicationUser>()
                 .HasMany<Rating>(u => u.Ratings)
@@ -70,13 +75,19 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Data
                .HasForeignKey(c => c.UserId);
 
             builder.Entity<Review>()
-                .HasMany<Comment>(c => c.Comments)
-                .WithOne(r => r.Review)
-                .HasForeignKey(r => r.CommentId);
+                .HasMany<Comment>(r => r.Comments)
+                .WithOne(c => c.Review)
+                .HasForeignKey(c => c.CommentId);
+
+            builder.Entity<Review>()
+                .HasMany<Rating>(rev => rev.Ratings)
+                .WithOne(rat => rat.Review)
+                .HasForeignKey(rat => rat.RatingId);
         }
 
         public DbSet<Smartphone> Smartphones { get; set; }
-        public DbSet<PhoneDetails> PhoneDetails { get; set; }
+        public DbSet<Manufacturer> Manufacturers { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Processor> Processors { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Rating> Ratings { get; set; }

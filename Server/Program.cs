@@ -8,6 +8,9 @@ using SmartphonePortal_Vervoort_Wagner.Server.Mappers;
 using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using SmartphonePortal_Vervoort_Wagner.Server.Services;
+using IProfileService = SmartphonePortal_Vervoort_Wagner.Server.Interfaces.IProfileService;
+using SmartphonePortal_Vervoort_Wagner.Server.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,7 +70,23 @@ builder.Services.AddSwaggerGen(options =>
 
 #region Dependency Injection
 
+// services
+builder.Services.AddTransient<IProfileService, ProfileService>();
+builder.Services.AddTransient<IProcessorService, ProcessorService>();
+builder.Services.AddTransient<ISmartphoneService, SmartphoneService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<IManufacturerService, ManufacturerService>();
+
+// mappers
 builder.Services.AddTransient<IMapper<Processor, ProcessorViewModel>, ProcessorMapper>();
+builder.Services.AddTransient<IMapper<Comment, CommentViewModel>, CommentMapper>();
+builder.Services.AddTransient<IMapper<Rating, RatingViewModel>, RatingMapper>();
+builder.Services.AddTransient<IMapper<Review, ReviewViewModel>, ReviewMapper>();
+builder.Services.AddTransient<IMapper<ApplicationUser, ProfileViewModel>, ProfileMapper>();
+builder.Services.AddTransient<IMapper<Smartphone, SmartphoneViewModel>, SmartphoneMapper>();
+builder.Services.AddTransient<IMapper<Picture, PictureViewModel>, PictureMapper>();
+builder.Services.AddTransient<IMapper<Manufacturer, ManufacturerViewModel>, ManufacturerMapper>();
+builder.Services.AddTransient<IMapper<Category, CategoryViewModel>, CategoryMapper>();
 
 #endregion
 

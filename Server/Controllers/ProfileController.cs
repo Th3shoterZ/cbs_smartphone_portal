@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using SmartphonePortal_Vervoort_Wagner.Server.Data;
-using SmartphonePortal_Vervoort_Wagner.Server.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using SmartphonePortal_Vervoort_Wagner.Server.Interfaces;
 using SmartphonePortal_Vervoort_Wagner.Shared.Requests;
+using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 
 namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 
@@ -11,20 +9,11 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 [Route("[controller]")]
 public class ProfileController : ControllerBase
 {
-    private readonly ApplicationDbContext _dbContext;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IUserStore<ApplicationUser> _userStore;
-    private readonly IUserEmailStore<ApplicationUser> _emailStore;
+    private readonly IProfileService _profileService;
 
-    public ProfileController(
-    ApplicationDbContext dbContext,
-    UserManager<ApplicationUser> userManager,
-    IUserStore<ApplicationUser> userStore)
+    public ProfileController(IProfileService profileService)
     {
-        _dbContext = dbContext;
-        _userManager = userManager;
-        _userStore = userStore;
-        _emailStore = (IUserEmailStore<ApplicationUser>)userStore;
+        _profileService = profileService;
     }
 
     /// <summary>
@@ -33,13 +22,33 @@ public class ProfileController : ControllerBase
     /// <param name="profileId"></param>
     /// <returns></returns>
     [HttpGet]
-    [Route("{profileId}")]
-    public ActionResult<ApplicationUser> GetProfile(string profileId)
+    [Route("id/{profileId}")]
+    public async Task<ActionResult<ProfileViewModel>> GetProfileById(string profileId)
     {
         try
         {
-            ApplicationUser? user = _dbContext.Users.FirstOrDefault(x => x.Id == profileId);
+            var user = await _profileService.GetProfileById(profileId);
             return Ok(user);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Get a user profile by email
+    /// </summary>
+    /// <param name="email"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("email/{email}")]
+    public async Task<ActionResult<ProfileViewModel>> GetProfileByEmail(string email)
+    {
+        try
+        {
+            var result = await _profileService.GetProfileByEmail(email);
+            return Ok(result);
         }
         catch (Exception ex)
         {
@@ -53,11 +62,12 @@ public class ProfileController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Route("all")]
-    public ActionResult<List<ApplicationUser>> GetAllProfiles()
+    public async Task<ActionResult<List<ProfileViewModel>>> GetAllProfiles()
     {
         try
         {
-            return Ok(_dbContext.Users);
+            List<ProfileViewModel> result = await _profileService.GetAllProfiles();
+            return Ok(result);
         }
         catch (Exception ex)
         {
@@ -72,15 +82,53 @@ public class ProfileController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Route("create")]
-    public async Task<IActionResult> CreateProfile(UserCreationRequest request)
+    public async Task<ActionResult> CreateProfile(ProfileCreationRequest request)
     {
         try
         {
-            var user = Activator.CreateInstance<ApplicationUser>();
+            await _profileService.CreateProfile(request);
 
-            await _userStore.SetUserNameAsync(user, request.Email, CancellationToken.None);
-            await _emailStore.SetEmailAsync(user, request.Email, CancellationToken.None);
-            var result = await _userManager.CreateAsync(user, request.Password);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
+
+    }
+
+    /// <summary>
+    /// Update a user profile
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("update")]
+    public async Task<ActionResult> UpdateProfile(ProfileUpdateRequest request)
+    {
+        try
+        {
+            await _profileService.UpdateProfile(request);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Delete a user profile
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    [HttpDelete]
+    [Route("delete/{userId}")]
+    public async Task<ActionResult> DeleteProfile(string userId)
+    {
+        try
+        {
+            await _profileService.DeleteProfile(userId);
             return Ok();
         }
         catch (Exception ex)

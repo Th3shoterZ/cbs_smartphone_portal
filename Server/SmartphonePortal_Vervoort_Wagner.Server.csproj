@@ -10,6 +10,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="SmartphonePortal.db-shm" />
+	  <None Remove="SmartphonePortal.db-wal" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.13" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.15" />

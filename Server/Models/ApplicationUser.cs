@@ -4,7 +4,7 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Models;
 
 public class ApplicationUser : IdentityUser
 {
-    public List<Comment>? Comments { get; set; }
-    public List<Rating>? Ratings { get; set; }
-    public List<Review>? Reviews { get; set; }
+    public List<Comment> Comments { get; set; } = new();
+    public List<Rating> Ratings { get; set; } = new();
+    public List<Review> Reviews { get; set; } = new();
 }

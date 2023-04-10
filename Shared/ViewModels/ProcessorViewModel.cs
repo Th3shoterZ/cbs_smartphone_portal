@@ -3,7 +3,7 @@
 public class ProcessorViewModel
 {
     public int ProcessorId { get; set; }
-    public string? Gigaherz { get; set; }
+    public string Gigaherz { get; set; } = string.Empty;
     public int CoreCount { get; set; }
-    public string? Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 }
