@@ -76,6 +76,7 @@ builder.Services.AddTransient<IProcessorService, ProcessorService>();
 builder.Services.AddTransient<ISmartphoneService, SmartphoneService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IManufacturerService, ManufacturerService>();
+builder.Services.AddTransient<IReviewService, ReviewService>();
 
 // mappers
 builder.Services.AddTransient<IMapper<Processor, ProcessorViewModel>, ProcessorMapper>();

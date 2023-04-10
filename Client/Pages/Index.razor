@@ -1,12 +1,46 @@
 ﻿@page "/"
+@using SmartphonePortal_Vervoort_Wagner.Client.Partials
+@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
+
+@inject HttpClient Client
 
 <PageTitle>Smartphone Portal</PageTitle>
 
-<div class="mt-10">
-    <h1 class="text-3xl">Hello, world!</h1>
-    <hr />
-    <br />
-    <p>
-        Welcome to your new app.
-    </p>
+<div>
+    <div class="mt-10 mx-auto max-w-lg">
+        <h1 class="text-3xl">Smartphone Portal!</h1>
+        <hr />
+        <br />
+        <p>
+            All the best smartphone takes in one place!
+        </p>
+    </div>
+    <div class="mt-20">
+        @if (IsRequestInProcess)
+        {
+            <Loader />
+        }
+        else
+        {
+            @foreach (var smartphone in Smartphones)
+            {
+                <SmartphoneCard Smartphone="smartphone" />
+            }
+        }
+    </div>
+
 </div>
+
+@code {
+    public List<SmartphoneViewModel> Smartphones { get; set; } = new();
+    public bool IsRequestInProcess { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsRequestInProcess = true;
+        Smartphones = await Client.GetFromJsonAsync<List<SmartphoneViewModel>>("/Smartphone/all") ?? new();
+        IsRequestInProcess = false;
+
+        await base.OnInitializedAsync();
+    }
+}

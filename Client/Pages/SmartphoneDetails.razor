@@ -1,0 +1,71 @@
+﻿@page "/smartphone/{SmartphoneId:int}"
+
+@using SmartphonePortal_Vervoort_Wagner.Client.Partials
+@using SmartphonePortal_Vervoort_Wagner.Shared.Requests
+@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
+
+@inject HttpClient Client
+
+@if (IsRequestInProcess)
+{
+    <Loader />
+}
+else
+{
+    <div>
+        <div class="mt-10 mx-auto max-w-lg">
+            <h1 class="text-3xl">@Smartphone.Name</h1>
+            <hr />
+            <br />
+            <p>
+                @Smartphone.Description
+            </p>
+        </div>
+    </div>
+    <AuthorizeView>
+        <div class="mt-10 mx-auto max-w-lg">
+            <CreateReviewCard SmartphoneId="@SmartphoneId" />
+        </div>
+    </AuthorizeView>
+    <div class="mt-10 mx-auto max-w-lg">
+        @foreach (var review in Reviews)
+        {
+
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int SmartphoneId { get; set; }
+    public SmartphoneViewModel Smartphone { get; set; } = new();
+    public bool IsRequestInProcess { get; set; }
+    public List<ReviewViewModel> Reviews { get; set; } = new();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsRequestInProcess = true;
+        try
+        {
+            Smartphone = await Client.GetFromJsonAsync<SmartphoneViewModel>($"/Smartphone/{SmartphoneId}") ?? new();
+            Reviews = await Client.GetFromJsonAsync<List<ReviewViewModel>>($"/Review/smartphone/{SmartphoneId}") ?? new();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        IsRequestInProcess = false;
+
+
+        await base.OnInitializedAsync();
+    }
+}
+
+
+
+
+
+
