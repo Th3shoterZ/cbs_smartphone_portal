@@ -54,7 +54,7 @@
     {
         if (Manufacturer.ManufacturerId > 0)
         {
-            var response = await Client.DeleteAsync("Manufacturer/" + Manufacturer.ManufacturerId);
+            var response = await Client.DeleteAsync("/api/Manufacturer/" + Manufacturer.ManufacturerId);
         }
         await OnClose.InvokeAsync(true);
     }

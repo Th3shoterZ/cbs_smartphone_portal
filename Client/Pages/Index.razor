@@ -2,7 +2,7 @@
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
 
-@inject HttpClient Client
+@inject IHttpClientFactory ClientFactory
 
 <PageTitle>Smartphone Portal</PageTitle>
 
@@ -34,11 +34,20 @@
 @code {
     public List<SmartphoneViewModel> Smartphones { get; set; } = new();
     public bool IsRequestInProcess { get; set; }
+    private HttpClient? _client;
 
     protected override async Task OnInitializedAsync()
     {
         IsRequestInProcess = true;
-        Smartphones = await Client.GetFromJsonAsync<List<SmartphoneViewModel>>("/Smartphone/all") ?? new();
+        _client = ClientFactory.CreateClient("AnonymousApi");
+        try
+        {
+            Smartphones = await _client.GetFromJsonAsync<List<SmartphoneViewModel>>("/api/Smartphone/all") ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
         IsRequestInProcess = false;
 
         await base.OnInitializedAsync();

@@ -54,7 +54,7 @@
     {
         if (Processor.ProcessorId > 0)
         {
-            var response = await Client.DeleteAsync("Processor/" + Processor.ProcessorId);
+            var response = await Client.DeleteAsync("/api/Processor/" + Processor.ProcessorId);
         }
         await OnClose.InvokeAsync(true);
     }

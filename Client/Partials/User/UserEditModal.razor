@@ -122,7 +122,7 @@
 
 
         RequestInProcess = true;
-        var response = await Client.PostAsync("Profile/update", JsonContent.Create<ProfileUpdateRequest>(ProfileUpdate));
+        var response = await Client.PostAsync("/api/Profile/update", JsonContent.Create<ProfileUpdateRequest>(ProfileUpdate));
         RequestInProcess = false;
         await OnClose.InvokeAsync(true);
     }

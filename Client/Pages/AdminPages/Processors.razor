@@ -1,4 +1,5 @@
 ﻿@page "/admin/processors"
+
 @using Microsoft.AspNetCore.Authorization
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials.Processor
@@ -158,7 +159,7 @@
     {
         try
         {
-            ProcessorModels = await Client.GetFromJsonAsync<List<ProcessorViewModel>>("/Processor/all") ?? new();
+            ProcessorModels = await Client.GetFromJsonAsync<List<ProcessorViewModel>>("/api/Processor/all") ?? new();
             this.StateHasChanged();
         }
         catch (Exception ex)

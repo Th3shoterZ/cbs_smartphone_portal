@@ -54,7 +54,7 @@
     {
         if (Category.CategoryId > 0)
         {
-            var response = await Client.DeleteAsync("Category/" + Category.CategoryId);
+            var response = await Client.DeleteAsync("/api/Category/" + Category.CategoryId);
         }
         await OnClose.InvokeAsync(true);
     }

@@ -16,6 +16,11 @@
             <div class="my-4">
                 <div asp-validation-summary="ModelOnly" class="text-sm text-red-600"></div>
                 <div class="flex flex-col my-2">
+                    <label class="font-bold" asp-for="Input.UserName">Username</label>
+                    <input asp-for="Input.UserName" class="px-2 rounded border border-gray-600 drop-shadow-md bg-gray-100 h-10" autocomplete="username" aria-required="true" />
+                    <span asp-validation-for="Input.UserName" class="text-sm text-red-600"></span>
+                </div>
+                <div class="flex flex-col my-2">
                     <label class="font-bold" asp-for="Input.Email"></label>
                     <input asp-for="Input.Email" class="px-2 rounded border border-gray-600 drop-shadow-md bg-gray-100 h-10" autocomplete="username" aria-required="true" />
                     <span asp-validation-for="Input.Email" class="text-sm text-red-600"></span>

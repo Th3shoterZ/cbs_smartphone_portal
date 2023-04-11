@@ -1,5 +1,15 @@
-﻿<h3>ReviewCard</h3>
+﻿@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
+
+<div class="p-2 border border-gray-800 rounded-md ">
+    <div class="flex justify-between">
+        <h3 class="text-xl font-bold">@Review.Title</h3>
+        <h4 class="">by @Review.UserId.Substring(0,5)</h4>
+    </div>
+    <hr />
+    <p>@Review.Text</p>
+</div>
+
 
 @code {
-
+    [Parameter] public ReviewViewModel Review { get; set; } = new();
 }

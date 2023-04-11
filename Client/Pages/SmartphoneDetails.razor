@@ -4,7 +4,8 @@
 @using SmartphonePortal_Vervoort_Wagner.Shared.Requests
 @using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
 
-@inject HttpClient Client
+@inject IHttpClientFactory ClientFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @if (IsRequestInProcess)
 {
@@ -17,20 +18,49 @@ else
             <h1 class="text-3xl">@Smartphone.Name</h1>
             <hr />
             <br />
-            <p>
-                @Smartphone.Description
-            </p>
+            <div>
+                <p>
+                    @Smartphone.Description
+                </p>
+                <br />
+                <p>
+                    Made by
+                    @Smartphone.Manufacturer.Name
+                    @Smartphone.Manufacturer.LinkToHomePage
+                </p>
+            </div>
+            <div>
+                <h4 class="font-bold text-xl">Category</h4>
+                <p>
+                    @Smartphone.Category.Name
+                </p>
+            </div>
+            <div>
+                <h4 class="font-bold text-xl">Prozessor</h4>
+                <p>
+                    @Smartphone.Processor.Title
+                </p>
+                <p>
+                    @Smartphone.Processor.CoreCount
+                </p>
+                <p>
+                    @Smartphone.Processor.Gigaherz
+                </p>
+            </div>
         </div>
     </div>
     <AuthorizeView>
-        <div class="mt-10 mx-auto max-w-lg">
-            <CreateReviewCard SmartphoneId="@SmartphoneId" />
-        </div>
+        @if (UserCanReview)
+        {
+            <div class="mt-10 mx-auto max-w-lg">
+                <CreateReviewCard SmartphoneId="@SmartphoneId" OnReviewSubmitted="OnReviewSubmitted" />
+            </div>
+        }
     </AuthorizeView>
-    <div class="mt-10 mx-auto max-w-lg">
+    <div class="mt-10 mx-auto max-w-lg space-y-2">
         @foreach (var review in Reviews)
         {
-
+            <ReviewCard Review="review" />
         }
     </div>
 }
@@ -41,16 +71,20 @@ else
     public SmartphoneViewModel Smartphone { get; set; } = new();
     public bool IsRequestInProcess { get; set; }
     public List<ReviewViewModel> Reviews { get; set; } = new();
-
+    private HttpClient? _client;
+    public bool UserCanReview { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
+        _client = ClientFactory.CreateClient("AnonymousApi");
+
         IsRequestInProcess = true;
         try
         {
-            Smartphone = await Client.GetFromJsonAsync<SmartphoneViewModel>($"/Smartphone/{SmartphoneId}") ?? new();
-            Reviews = await Client.GetFromJsonAsync<List<ReviewViewModel>>($"/Review/smartphone/{SmartphoneId}") ?? new();
+            UserCanReview = UserCanLeaveReview();
+            Smartphone = await _client.GetFromJsonAsync<SmartphoneViewModel>($"/api/Smartphone/{SmartphoneId}") ?? new();
+            await FetchReviews();
 
         }
         catch (Exception ex)
@@ -59,8 +93,36 @@ else
         }
         IsRequestInProcess = false;
 
-
         await base.OnInitializedAsync();
+    }
+
+    private bool UserCanLeaveReview()
+    {
+        //var authstate = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        //var user = authstate.User;
+        //if (Convert.ToBoolean(authstate.User?.Identity?.IsAuthenticated))
+        //{
+        //    NewReview.UserId = user.FindFirst(c => c.Type == "sub")?.Value ?? string.Empty;
+        //}
+        return true;
+    }
+
+    private async Task FetchReviews() {
+        if (_client == null) return;
+        try
+        {
+            Reviews = await _client.GetFromJsonAsync<List<ReviewViewModel>>($"/api/Review/smartphone/{SmartphoneId}") ?? new();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    private async Task OnReviewSubmitted()
+    {
+        await FetchReviews();
     }
 }
 

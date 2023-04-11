@@ -1,4 +1,5 @@
-﻿using SmartphonePortal_Vervoort_Wagner.Server.Data;
+﻿using Microsoft.AspNetCore.Identity;
+using SmartphonePortal_Vervoort_Wagner.Server.Data;
 using SmartphonePortal_Vervoort_Wagner.Server.Interfaces;
 using SmartphonePortal_Vervoort_Wagner.Server.Models;
 using SmartphonePortal_Vervoort_Wagner.Shared.Requests;
@@ -10,13 +11,16 @@ public class ReviewService : IReviewService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IMapper<Review, ReviewViewModel> _mapper;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public ReviewService(
-        ApplicationDbContext dbContext, 
-        IMapper<Review, ReviewViewModel> mapper)
+        ApplicationDbContext dbContext,
+        IMapper<Review, ReviewViewModel> mapper,
+        UserManager<ApplicationUser> userManager)
     {
         _dbContext = dbContext;
         _mapper = mapper;
+        _userManager = userManager;
     }
 
     public ReviewViewModel GetReviewById(int id)
@@ -61,13 +65,19 @@ public class ReviewService : IReviewService
         }
         return result;
     }
+
     public async Task CreateReview(ReviewCreationRequest request)
     {
+        Smartphone? smartphone = _dbContext.Smartphones.FirstOrDefault(x=>x.SmartphoneId == request.SmartphoneId);
+        ApplicationUser? user = _dbContext.Users.FirstOrDefault(x => x.Id.Equals(request.UserId));
+        if (user == null || smartphone == null) throw new Exception("user and/or smartphone not found");
+
         Review review = new Review
         {
             Text = request.Text,
             Title = request.Title,
-            
+            Smartphone = smartphone,
+            User = user,
         };
         _dbContext.Reviews.Add(review);
         await _dbContext.SaveChangesAsync();

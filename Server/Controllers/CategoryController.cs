@@ -6,7 +6,7 @@ using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;
@@ -38,11 +38,11 @@ public class CategoryController : ControllerBase
     }
 
     /// <summary>
-    /// Get all categories
+    /// Get all categories (alls coz issue with using just "all")
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [Route("all")]
+    [Route("alls")]
     public ActionResult<List<CategoryViewModel>> GetAllCategories()
     {
         try

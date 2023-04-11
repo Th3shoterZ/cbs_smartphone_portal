@@ -129,7 +129,7 @@
 
 
         RequestInProcess = true;
-        var response = await Client.PostAsync("Processor/update", JsonContent.Create<ProcessorUpdateRequest>(ProcessorUpdate));
+        var response = await Client.PostAsync("/api/Processor/update", JsonContent.Create<ProcessorUpdateRequest>(ProcessorUpdate));
         RequestInProcess = false;
         await OnClose.InvokeAsync(true);
     }

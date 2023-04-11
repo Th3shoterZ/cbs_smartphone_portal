@@ -1,23 +1,49 @@
 ﻿@using SmartphonePortal_Vervoort_Wagner.Shared.Requests
+@inject HttpClient Client
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <EditForm EditContext="@editContext" Context="ReviewContext">
     <div class="flex flex-col">
         <div>
-            <InputText class="px-2 rounded border border-gray-400 bg-white h-10"
-                       @bind-Value="@NewReview.Title" />
+            <p class="font-bold text-xl">
+                Your Review
+            </p>
         </div>
-        <div>
-            <InputTextArea class="px-2 rounded border border-gray-400 bg-white h-10"
-                           @bind-Value="@NewReview.Text" />
+        <div class="space-y-4">
+            <div class="flex flex-col my-2">
+                <label class="block mb-2 text-gray-900" for="email_input">
+                    Title
+                </label>
+                <InputText class="px-2 rounded border border-gray-400 bg-white h-10"
+                           @bind-Value="@NewReview.Title" />
+                <div class="text-sm text-red-600">
+                    <ValidationMessage For=@( () => NewReview.Title) />
+                </div>
+            </div>
+            <div class="flex flex-col my-2">
+                <label class="block mb-2 text-gray-900" for="email_input">
+                    Description
+                </label>
+                <InputTextArea class="px-2 rounded border border-gray-400 bg-white h-10"
+                               @bind-Value="@NewReview.Text" />
+                <div class="text-sm text-red-600">
+                    <ValidationMessage For=@( () => NewReview.Text) />
+                </div>
+            </div>
+            <div class="flex justify-end p-6 space-x-2 border-t border-gray-200 rounded-b">
+                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                        type="button"
+                        @onclick=@Submit>
+                    Submit
+                </button>
+            </div>
         </div>
-        @*   <div>
-        <InputNumber class="px-2 rounded border border-gray-400 bg-white h-10"
-        @bind-Value="@NewReview.Rating" />
-        </div>*@
     </div>
 </EditForm>
+
 @code {
     [Parameter] public int SmartphoneId { get; set; }
+    [Parameter] public EventCallback OnReviewSubmitted { get; set; }
     private EditContext? editContext;
     public ReviewCreationRequest NewReview { get; set; } = new();
 
@@ -26,6 +52,29 @@
         editContext = new(NewReview);
         editContext.EnableDataAnnotationsValidation();
 
+        var authstate = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authstate.User;
+        if (Convert.ToBoolean(authstate.User?.Identity?.IsAuthenticated))
+        {
+            NewReview.UserId = user.FindFirst(c => c.Type == "sub")?.Value ?? string.Empty;
+        }
+
+        NewReview.SmartphoneId = SmartphoneId;
+
+
         await base.OnInitializedAsync();
+    }
+
+    public async Task Submit()
+    {
+        try
+        {
+            var response = await Client.PostAsJsonAsync<ReviewCreationRequest>("/api/Review/create", NewReview);
+            await OnReviewSubmitted.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
 }

@@ -6,7 +6,7 @@ using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class SmartphoneController : ControllerBase
 {
     private readonly ISmartphoneService _smartphoneService;
@@ -22,7 +22,7 @@ public class SmartphoneController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Route("{smartphoneId}")]
-    public ActionResult<SmartphoneViewModel> GetProcessor(int smartphoneId)
+    public ActionResult<SmartphoneViewModel> GetSmartphone(int smartphoneId)
     {
         try
         {
@@ -42,7 +42,7 @@ public class SmartphoneController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Route("all")]
-    public ActionResult<List<SmartphoneViewModel>> GetAllProcessors()
+    public ActionResult<List<SmartphoneViewModel>> GetAllSmartphones()
     {
         try
         {
@@ -63,7 +63,7 @@ public class SmartphoneController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Route("create")]
-    public async Task<ActionResult> CreateProcessor(SmartphoneCreationRequest request)
+    public async Task<ActionResult> CreateSmartphone(SmartphoneCreationRequest request)
     {
         try
         {
@@ -83,7 +83,7 @@ public class SmartphoneController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Route("update")]
-    public async Task<ActionResult> UpdateProcessor(SmartphoneUpdateRequest request)
+    public async Task<ActionResult> UpdateSmartphone(SmartphoneUpdateRequest request)
     {
         try
         {
@@ -103,7 +103,7 @@ public class SmartphoneController : ControllerBase
     /// <returns></returns>
     [HttpDelete]
     [Route("{smartphoneId}")]
-    public async Task<ActionResult> DeleteProcessor(int smartphoneId)
+    public async Task<ActionResult> DeleteSmartphone(int smartphoneId)
     {
         try
         {

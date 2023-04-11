@@ -6,7 +6,7 @@ using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ReviewController : ControllerBase
 {
     private readonly IReviewService _reviewService;
@@ -106,7 +106,7 @@ public class ReviewController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Route("create")]
-    public async Task<ActionResult> CreateCategory(ReviewCreationRequest request)
+    public async Task<ActionResult> CreateReview(ReviewCreationRequest request)
     {
         try
         {

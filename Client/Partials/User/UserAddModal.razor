@@ -128,7 +128,7 @@
 
         RequestInProcess = true;
 
-        var response = await Client.PostAsync("Profile/create", JsonContent.Create<ProfileCreationRequest>(Profile));
+        var response = await Client.PostAsync("/api/Profile/create", JsonContent.Create<ProfileCreationRequest>(Profile));
         RequestInProcess = false;
         await OnClose.InvokeAsync(true);
     }

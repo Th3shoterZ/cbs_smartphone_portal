@@ -6,7 +6,7 @@ using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ManufacturerController : ControllerBase
 {
     private readonly IManufacturerService _manufacturerService;
@@ -23,7 +23,7 @@ public class ManufacturerController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Route("{manufacturerId}")]
-    public ActionResult<ManufacturerViewModel> GetCategory(int manufacturerId)
+    public ActionResult<ManufacturerViewModel> GetManufacturer(int manufacturerId)
     {
         try
         {
@@ -43,7 +43,7 @@ public class ManufacturerController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Route("all")]
-    public ActionResult<List<ManufacturerViewModel>> GetAllCategories()
+    public ActionResult<List<ManufacturerViewModel>> GetAllManufacturers()
     {
         try
         {
@@ -64,7 +64,7 @@ public class ManufacturerController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Route("create")]
-    public async Task<ActionResult> CreateCategory(ManufacturerCreationRequest request)
+    public async Task<ActionResult> CreateManufacturer(ManufacturerCreationRequest request)
     {
         try
         {
@@ -84,7 +84,7 @@ public class ManufacturerController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Route("update")]
-    public async Task<ActionResult> UpdateCategory(ManufacturerUpdateRequest request)
+    public async Task<ActionResult> UpdateManufacturer(ManufacturerUpdateRequest request)
     {
         try
         {
@@ -104,7 +104,7 @@ public class ManufacturerController : ControllerBase
     /// <returns></returns>
     [HttpDelete]
     [Route("{manufacturerId}")]
-    public async Task<ActionResult> DeleteCategory(int manufacturerId)
+    public async Task<ActionResult> DeleteManufacturer(int manufacturerId)
     {
         try
         {

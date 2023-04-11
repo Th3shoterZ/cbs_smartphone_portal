@@ -104,7 +104,7 @@
 
 
         RequestInProcess = true;
-        var response = await Client.PostAsync("Category/update", JsonContent.Create<CategoryUpdateRequest>(CategoryUpdate));
+        var response = await Client.PostAsync("api/Category/update", JsonContent.Create<CategoryUpdateRequest>(CategoryUpdate));
         RequestInProcess = false;
         await OnClose.InvokeAsync(true);
     }

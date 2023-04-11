@@ -10,7 +10,7 @@ using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ProcessorController : ControllerBase
 {
     private readonly IProcessorService _processorService;

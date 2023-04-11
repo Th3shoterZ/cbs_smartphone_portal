@@ -54,7 +54,7 @@
     {
         if (!string.IsNullOrEmpty(Profile.Id))
         {
-            var response = await Client.DeleteAsync("Profile/delete/" + Profile.Id);
+            var response = await Client.DeleteAsync("/api/Profile/delete/" + Profile.Id);
         }
         await OnClose.InvokeAsync(true);
     }

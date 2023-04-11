@@ -1,4 +1,5 @@
 ﻿@page "/admin/manufacturers"
+
 @using Microsoft.AspNetCore.Authorization
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials.Manufacturer
@@ -110,7 +111,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await FetchProcessors();
+        await FetchManufacturers();
         await base.OnInitializedAsync();
     }
 
@@ -119,7 +120,7 @@
     public async void OnEditModalClose()
     {
         IsEditModalOpen = false;
-        await FetchProcessors();
+        await FetchManufacturers();
     }
     public void OpenEditModal(ManufacturerViewModel manufacturer)
     {
@@ -132,7 +133,7 @@
     public async void OnAddModalClose()
     {
         IsAddModalOpen = false;
-        await FetchProcessors();
+        await FetchManufacturers();
     }
     public void OpenAddModal()
     {
@@ -144,7 +145,7 @@
     public async void OnDeleteModalClose()
     {
         IsDeleteModalOpen = false;
-        await FetchProcessors();
+        await FetchManufacturers();
     }
     public void OpenDeleteModal(ManufacturerViewModel manufacturer)
     {
@@ -154,11 +155,11 @@
     }
 
 
-    private async Task FetchProcessors()
+    private async Task FetchManufacturers()
     {
         try
         {
-            ManufacturerModels = await Client.GetFromJsonAsync<List<ManufacturerViewModel>>("/Manufacturer/all") ?? new();
+            ManufacturerModels = await Client.GetFromJsonAsync<List<ManufacturerViewModel>>("/api/Manufacturer/all") ?? new();
             //Console.WriteLine(JsonSerializer.Serialize(Smartphones[0]));
             this.StateHasChanged();
         }

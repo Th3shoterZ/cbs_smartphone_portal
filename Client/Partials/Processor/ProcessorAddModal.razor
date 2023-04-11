@@ -123,7 +123,7 @@
 
         RequestInProcess = true;
 
-        var response = await Client.PostAsync("Processor/create", JsonContent.Create<ProcessorCreationRequest>(Processor));
+        var response = await Client.PostAsync("/api/Processor/create", JsonContent.Create<ProcessorCreationRequest>(Processor));
         RequestInProcess = false;
         await OnClose.InvokeAsync(true);
     }

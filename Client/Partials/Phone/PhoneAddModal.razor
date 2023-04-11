@@ -202,7 +202,7 @@
 
         RequestInProcess = true;
 
-        var response = await Client.PostAsync("Smartphone/create", JsonContent.Create<SmartphoneCreationRequest>(Smartphone));
+        var response = await Client.PostAsync("/api/Smartphone/create", JsonContent.Create<SmartphoneCreationRequest>(Smartphone));
         RequestInProcess = false;
         await OnClose.InvokeAsync(true);
     }

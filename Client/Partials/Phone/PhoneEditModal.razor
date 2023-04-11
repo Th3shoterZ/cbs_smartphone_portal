@@ -215,7 +215,7 @@
 
 
         RequestInProcess = true;
-        var response = await Client.PostAsync("Smartphone/update", JsonContent.Create<SmartphoneUpdateRequest>(SmartphoneUpdate));
+        var response = await Client.PostAsync("/api/Smartphone/update", JsonContent.Create<SmartphoneUpdateRequest>(SmartphoneUpdate));
         RequestInProcess = false;
         await OnClose.InvokeAsync(true);
     }

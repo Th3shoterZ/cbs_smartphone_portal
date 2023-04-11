@@ -1,4 +1,5 @@
 ﻿@page "/admin/phones"
+
 @using Microsoft.AspNetCore.Authorization
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials.Phone
@@ -168,10 +169,10 @@
     {
         try
         {
-            Smartphones = await Client.GetFromJsonAsync<List<SmartphoneViewModel>>("/Smartphone/all") ?? new();
-            Categories = await Client.GetFromJsonAsync<List<CategoryViewModel>>("/Category/all") ?? new();
-            Manufacturers = await Client.GetFromJsonAsync<List<ManufacturerViewModel>>("/Manufacturer/all") ?? new();
-            Processors = await Client.GetFromJsonAsync<List<ProcessorViewModel>>("/Processor/all") ?? new();
+            Smartphones = await Client.GetFromJsonAsync<List<SmartphoneViewModel>>("/api/Smartphone/all") ?? new();
+            Categories = await Client.GetFromJsonAsync<List<CategoryViewModel>>("/api/Category/alls") ?? new();
+            Manufacturers = await Client.GetFromJsonAsync<List<ManufacturerViewModel>>("/api/Manufacturer/all") ?? new();
+            Processors = await Client.GetFromJsonAsync<List<ProcessorViewModel>>("/api/Processor/all") ?? new();
 
             //Console.WriteLine(JsonSerializer.Serialize(Smartphones[0]));
             this.StateHasChanged();

@@ -54,7 +54,7 @@
     {
         if (Smartphone.SmartphoneId > 0)
         {
-            var response = await Client.DeleteAsync("Smartphone/" + Smartphone.SmartphoneId);
+            var response = await Client.DeleteAsync("/api/Smartphone/" + Smartphone.SmartphoneId);
         }
         await OnClose.InvokeAsync(true);
     }

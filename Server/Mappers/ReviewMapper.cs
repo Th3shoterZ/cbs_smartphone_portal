@@ -20,9 +20,11 @@ public class ReviewMapper : IMapper<Review, ReviewViewModel>
 
         if (model.Ratings != null)
         {
-            List<int> stars = ((List<int>)(from Stars in model.Ratings
-                               select Stars));
-            result.Rating = (int)stars.Average();
+            List<int> stars = model.Ratings.Select(x => x.Stars).ToList();
+            if (stars.Count > 0)
+            {
+                result.Rating = (int)stars.Average();
+            }
         }
 
         return result;

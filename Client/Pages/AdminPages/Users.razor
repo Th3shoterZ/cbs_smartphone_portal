@@ -1,4 +1,5 @@
 ﻿@page "/admin/users"
+
 @using Microsoft.AspNetCore.Authorization
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials.User
@@ -152,7 +153,7 @@
     {
         try
         {
-            Profiles = await Client.GetFromJsonAsync<List<ProfileViewModel>>("/Profile/all") ?? new();
+            Profiles = await Client.GetFromJsonAsync<List<ProfileViewModel>>("/api/Profile/all") ?? new();
             this.StateHasChanged();
         }
         catch (Exception ex)
