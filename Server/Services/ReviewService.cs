@@ -77,6 +77,7 @@ public class ReviewService : IReviewService
             Text = request.Text,
             Title = request.Title,
             Smartphone = smartphone,
+            UserName = user.UserName,
             User = user,
         };
         _dbContext.Reviews.Add(review);

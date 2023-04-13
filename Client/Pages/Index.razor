@@ -15,17 +15,21 @@
             All the best smartphone takes in one place!
         </p>
     </div>
-    <div class="mt-20">
+    <div class="mx-auto mt-20 max-w-3xl">
         @if (IsRequestInProcess)
         {
             <Loader />
         }
         else
         {
-            @foreach (var smartphone in Smartphones)
-            {
-                <SmartphoneCard Smartphone="smartphone" />
-            }
+            <div class="grid grid-cols-12 gap-4">
+                @foreach (var smartphone in Smartphones)
+                {
+                    <div class="sm:col-span-4 col-span-12">
+                        <SmartphoneCard Smartphone="smartphone" />
+                    </div>
+                }
+            </div>
         }
     </div>
 

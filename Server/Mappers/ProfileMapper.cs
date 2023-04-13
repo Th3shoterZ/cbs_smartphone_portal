@@ -26,10 +26,7 @@ public class ProfileMapper : IMapper<ApplicationUser, ProfileViewModel>
         {
             Email = model.Email,
             Id = model.Id,
-            UserName = model.UserName,
-            Comments = new(),
-            Ratings = new(),
-            Reviews = new()
+            UserName = model.UserName
         };
 
         if (model.Comments != null)

@@ -14,7 +14,7 @@ public class RatingMapper : IMapper<Rating, RatingViewModel>
             SmartphoneId = model.SmartphoneId,
             Stars = model.Stars,
             UserId = model.UserId,
-            ReviewId = model.Review?.ReviewId ?? 0
+            ReviewId = model.Review.ReviewId
         }; ;
     }
 }

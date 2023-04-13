@@ -13,55 +13,76 @@
 }
 else
 {
-    <div>
-        <div class="mt-10 mx-auto max-w-lg">
-            <h1 class="text-3xl">@Smartphone.Name</h1>
-            <hr />
-            <br />
-            <div>
-                <p>
-                    @Smartphone.Description
-                </p>
-                <br />
-                <p>
-                    Made by
-                    @Smartphone.Manufacturer.Name
-                    @Smartphone.Manufacturer.LinkToHomePage
-                </p>
-            </div>
-            <div>
-                <h4 class="font-bold text-xl">Category</h4>
-                <p>
-                    @Smartphone.Category.Name
-                </p>
-            </div>
-            <div>
-                <h4 class="font-bold text-xl">Prozessor</h4>
-                <p>
-                    @Smartphone.Processor.Title
-                </p>
-                <p>
-                    @Smartphone.Processor.CoreCount
-                </p>
-                <p>
-                    @Smartphone.Processor.Gigaherz
-                </p>
+    <div class="mb-10">
+        <div>
+            <div class="mt-10 mx-auto max-w-lg">
+                <h1 class="text-3xl">@Smartphone.Name</h1>
+                <hr />
+                <div class="my-2 space-y-2">
+                    <p>
+                        Made by
+                        @if (string.IsNullOrEmpty(Smartphone.Manufacturer.LinkToHomePage))
+                        {
+                            @Smartphone.Manufacturer.Name
+                        }
+                        else
+                        {
+                            <a class="text-blue-400 hover:underline"
+                       href="@Smartphone.Manufacturer.LinkToHomePage">
+                                @Smartphone.Manufacturer.Name
+                            </a>
+                        }
+                    </p>
+                    <p>
+                        @Smartphone.Description
+                    </p>
+                    <p>
+                        Resoltion: @Smartphone.Resolution
+                    </p>
+                    <p>
+                        Display Size: @Smartphone.DisplaySize
+                    </p>
+                    <p>
+                        Weight: @Smartphone.Weight
+                    </p>
+                    <p>
+                        Rating: @Smartphone.Rating
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xl">Category</h4>
+                    <p>
+                        @Smartphone.Category.Name
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xl">Prozessor</h4>
+                    <p>
+                        @Smartphone.Processor.Title
+                    </p>
+                    <p>
+                        @Smartphone.Processor.CoreCount
+                    </p>
+                    <p>
+                        @Smartphone.Processor.Gigaherz
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
-    <AuthorizeView>
-        @if (UserCanReview)
-        {
-            <div class="mt-10 mx-auto max-w-lg">
-                <CreateReviewCard SmartphoneId="@SmartphoneId" OnReviewSubmitted="OnReviewSubmitted" />
-            </div>
-        }
-    </AuthorizeView>
-    <div class="mt-10 mx-auto max-w-lg space-y-2">
-        @foreach (var review in Reviews)
-        {
-            <ReviewCard Review="review" />
-        }
+        <AuthorizeView>
+            @if (UserCanReview)
+            {
+                <div class="mt-10 mx-auto max-w-lg">
+                    <CreateReviewCard SmartphoneId="@SmartphoneId" OnReviewSubmitted="OnReviewSubmitted" />
+                </div>
+            }
+        </AuthorizeView>
+        <div class="mt-10 mx-auto max-w-lg space-y-2">
+            @foreach (var review in Reviews)
+            {
+                <ReviewCard Review="review" />
+            }
+        </div>
     </div>
 }
 
@@ -107,7 +128,8 @@ else
         return true;
     }
 
-    private async Task FetchReviews() {
+    private async Task FetchReviews()
+    {
         if (_client == null) return;
         try
         {

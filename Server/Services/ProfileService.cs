@@ -73,7 +73,7 @@ public class ProfileService : IProfileService
     {
         var user = Activator.CreateInstance<ApplicationUser>();
 
-        await _userStore.SetUserNameAsync(user, request.Email, CancellationToken.None);
+        await _userStore.SetUserNameAsync(user, request.UserName, CancellationToken.None);
         await _emailStore.SetEmailAsync(user, request.Email, CancellationToken.None);
         await _userManager.CreateAsync(user, request.Password);
 
@@ -93,7 +93,7 @@ public class ProfileService : IProfileService
 
         if (!string.IsNullOrEmpty(request.Email))
         {
-            user.UserName = request.Email;
+            user.UserName = request.UserName;
             user.Email = request.Email;
         }
 

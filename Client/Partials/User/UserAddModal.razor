@@ -33,6 +33,18 @@
                 <div class="p-6 space-y-6">
 
                     <div class="flex flex-col my-2">
+                        <label class="block mb-2 text-gray-900" for="username_input">
+                            Username
+                        </label>
+                        <InputText class="px-2 rounded border border-gray-400 bg-white h-10"
+                                   id="username_input"
+                                   type="text"
+                                   @bind-Value="@Profile.UserName" />
+                        <div class="text-sm text-red-600">
+                            <ValidationMessage For=@( () => Profile.UserName) />
+                        </div>
+                    </div>
+                    <div class="flex flex-col my-2">
                         <label class="block mb-2 text-gray-900" for="email_input">
                             E-Mail
                         </label>

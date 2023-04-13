@@ -1,18 +1,22 @@
 ﻿@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
 @inject NavigationManager navigationManager
 
-<div @onclick=@GoToDetails class="flex bg-gray-700 p-2 my-5 mx-auto text-white border border-gray-500 max-w-2xl rounded-lg cursor-pointer hover:scale-105 transition">
-    <div class="mr-10">
-        <img src="http://via.placeholder.com/200x200" />
+<div @onclick=@GoToDetails class="flex flex-col bg-gray-700 p-2 my-2 mx-auto text-white border border-gray-500 rounded-lg cursor-pointer hover:scale-105 transition">
+    <div class="flex justify-between mb-2">
+        <div class="flex flex-col">
+            <div class="font-bold text-xl">
+                @Smartphone.Name
+            </div>
+            <div>
+                @Smartphone.Manufacturer.Name
+            </div>
+        </div>
+        <div class="">
+            @Smartphone.Rating
+        </div>
     </div>
-    <div class="grow flex flex-col">
-
-        <div class="font-bold text-xl">
-            @Smartphone.Name
-        </div>
-        <div>
-            by @Smartphone.Manufacturer.Name
-        </div>
+    <div class="mx-auto">
+        <img class="object-cover" loading="lazy" src="http://via.placeholder.com/200x200" style="height: 200px; width: 200px;" />
     </div>
 </div>
 

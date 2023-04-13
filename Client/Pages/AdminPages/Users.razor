@@ -48,10 +48,13 @@
                     <div class="h-10 px-2 pt-2 overflow-hidden col-span-2">
                         Id
                     </div>
-                    <div class="h-10 px-2 pt-2 col-span-4">
+                    <div class="h-10 px-2 pt-2 col-span-3">
+                        Username
+                    </div>
+                    <div class="h-10 px-2 pt-2 col-span-3">
                         E-Mail
                     </div>
-                    <div class="h-10 px-2 pt-2 col-span-4">
+                    <div class="h-10 px-2 pt-2 col-span-2">
                         Roles
                     </div>
                     <div class="h-10 text-center flex justify-center col-span-2">
@@ -68,10 +71,13 @@
                             @user.Id.Substring(0,5)
                             ...
                         </div>
-                        <div class="h-10 px-2 pt-2 col-span-4">
+                        <div class="h-10 px-2 pt-2 col-span-3">
                             @user.UserName
                         </div>
-                        <div class="h-10 px-2 pt-2 col-span-4">
+                        <div class="h-10 px-2 pt-2 col-span-3">
+                            @user.Email
+                        </div>
+                        <div class="h-10 px-2 pt-2 col-span-2">
                             @user.Role
                         </div>
                         <div class="flex h-10 divide-x  col-span-2">

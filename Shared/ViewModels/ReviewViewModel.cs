@@ -9,4 +9,5 @@ public class ReviewViewModel
     public List<CommentViewModel> Comments { get; set; } = new();
     public int Rating { get; set; }
     public string UserId { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
 }
