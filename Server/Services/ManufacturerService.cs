@@ -29,7 +29,7 @@ public class ManufacturerService : IManufacturerService
     public List<ManufacturerViewModel> GetAllManufacturers()
     {
         List<ManufacturerViewModel> result = new List<ManufacturerViewModel>();
-        foreach (Manufacturer manufacturer in _dbContext.Manufacturers)
+        foreach (Manufacturer manufacturer in _dbContext.Manufacturers.ToList())
         {
             result.Add(_mapper.GetMappedResult(manufacturer));
         }

@@ -32,7 +32,7 @@ public class ReviewService : IReviewService
 
     public List<ReviewViewModel> GetReviewsForSmartphone(int smartphoneId)
     {
-        var reviews = _dbContext.Reviews.Where(x => x.SmartphoneId == smartphoneId);
+        var reviews = _dbContext.Reviews.Where(x => x.SmartphoneId == smartphoneId).ToList();
         List<ReviewViewModel> result = new();
         if (reviews == null) return result;
 
@@ -45,7 +45,7 @@ public class ReviewService : IReviewService
 
     public List<ReviewViewModel> GetReviewsForUser(string userId)
     {
-        var reviews = _dbContext.Reviews.Where(x => x.UserId.Equals(userId));
+        var reviews = _dbContext.Reviews.Where(x => x.UserId.Equals(userId)).ToList();
         List<ReviewViewModel> result = new();
         if (reviews == null) return result;
 
@@ -59,7 +59,7 @@ public class ReviewService : IReviewService
     public List<ReviewViewModel> GetAllReviews()
     {
         List<ReviewViewModel> result = new List<ReviewViewModel>();
-        foreach (Review review in _dbContext.Reviews)
+        foreach (Review review in _dbContext.Reviews.ToList())
         {
             result.Add(_mapper.GetMappedResult(review));
         }

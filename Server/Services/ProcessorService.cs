@@ -30,7 +30,7 @@ public class ProcessorService : IProcessorService
     public List<ProcessorViewModel> GetAllProcessors()
     {
         List<ProcessorViewModel> result = new List<ProcessorViewModel>();
-        foreach (Processor processor in _dbContext.Processors)
+        foreach (Processor processor in _dbContext.Processors.ToList())
         {
             result.Add(_mapper.GetMappedResult(processor));
         }

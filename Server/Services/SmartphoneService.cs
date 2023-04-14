@@ -1,4 +1,5 @@
-﻿using SmartphonePortal_Vervoort_Wagner.Server.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartphonePortal_Vervoort_Wagner.Server.Data;
 using SmartphonePortal_Vervoort_Wagner.Server.Interfaces;
 using SmartphonePortal_Vervoort_Wagner.Server.Models;
 using SmartphonePortal_Vervoort_Wagner.Shared.Requests;
@@ -21,7 +22,12 @@ public class SmartphoneService : ISmartphoneService
 
     public SmartphoneViewModel GetSmartphoneById(int id)
     {
-        var phone = _dbContext.Smartphones.FirstOrDefault(x => x.SmartphoneId == id);
+        var phone = _dbContext.Smartphones
+            .Include(x=>x.Category)
+            .Include(x=>x.Processor)
+            .Include(x=>x.Manufacturer)
+            .Include(x=>x.Pictures)
+            .FirstOrDefault(x => x.SmartphoneId == id);
 
         if (phone == null) return new();
 

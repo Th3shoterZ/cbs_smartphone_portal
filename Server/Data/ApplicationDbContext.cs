@@ -19,7 +19,7 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite();
+            optionsBuilder.UseMySQL();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

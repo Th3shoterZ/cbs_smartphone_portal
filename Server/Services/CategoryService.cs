@@ -29,7 +29,7 @@ public class CategoryService : ICategoryService
     public List<CategoryViewModel> GetAllCategories()
     {
         List<CategoryViewModel> result = new List<CategoryViewModel>();
-        foreach (Category category in _dbContext.Categories)
+        foreach (Category category in _dbContext.Categories.ToList())
         {
             result.Add(_mapper.GetMappedResult(category));
         }

@@ -58,7 +58,7 @@ public class ProfileService : IProfileService
     public async Task<List<ProfileViewModel>> GetAllProfiles()
     {
         List<ProfileViewModel> profiles = new();
-        foreach (ApplicationUser user in _dbContext.Users)
+        foreach (ApplicationUser user in _dbContext.Users.ToList())
         {
             var temp = _mapper.GetMappedResult(user);
             var roles = await _userManager.GetRolesAsync(user);

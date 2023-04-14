@@ -15,9 +15,12 @@
             <form id="account" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-sm text-red-600"></div>
                 <div class="flex flex-col my-2">
-                    <label asp-for="Input.Email" class="font-bold"></label>
-                    <input asp-for="Input.Email" class="px-2 rounded border border-gray-600 drop-shadow-md bg-gray-100 h-10" autocomplete="username" aria-required="true" />
-                    <span asp-validation-for="Input.Email" class="text-sm text-red-600"></span>
+                    <label asp-for="Input.Username" class="font-bold">Username</label>
+                    <input asp-for="Input.Username"
+                           class="px-2 rounded border border-gray-600 drop-shadow-md bg-gray-100 h-10"
+                           autocomplete="username"
+                           aria-required="true" />
+                    <span asp-validation-for="Input.Username" class="text-sm text-red-600"></span>
                 </div>
                 <div class="flex flex-col my-2">
                     <label asp-for="Input.Password" class="font-bold"></label>
