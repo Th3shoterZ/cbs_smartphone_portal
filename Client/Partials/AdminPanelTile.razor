@@ -1,0 +1,22 @@
+﻿@inject NavigationManager NavigationManager
+
+<div class="flex flex-col justify-center w-44 h-24 bg-gray-200 text-center font-bold rounded cursor-pointer @(Disabled ? "hover:bg-gray-400" : "hover:bg-sky-400")"
+     onclick="@(() => Redirect())">
+    <div class="">
+        @Title
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Link { get; set; } = string.Empty;
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public bool Disabled { get; set; }
+
+    private void Redirect()
+    {
+        if (!Disabled)
+        {
+            NavigationManager.NavigateTo(Link);
+        }
+    }
+}

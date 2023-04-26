@@ -1,24 +1,26 @@
 ﻿@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
 @inject NavigationManager navigationManager
 
-<div @onclick=@GoToDetails class="flex flex-col bg-gray-700 p-2 my-2 mx-auto text-white border border-gray-500 rounded-lg cursor-pointer hover:scale-105 transition">
-    <div class="flex justify-between mb-2">
-        <div class="flex flex-col">
-            <div class="font-bold text-xl">
-                @Smartphone.Name
+<article>
+    <div @onclick=@GoToDetails class="flex flex-col bg-gradient-to-l from-sky-500 to-indigo-500 my-2 mx-auto text-white rounded-lg cursor-pointer hover:scale-105 transition">
+        <div class="flex justify-between mb-2 p-2 ">
+            <div class="flex flex-col">
+                <div class="font-bold text-xl">
+                    @Smartphone.Name
+                </div>
+                <div>
+                    @Smartphone.Manufacturer.Name
+                </div>
             </div>
-            <div>
-                @Smartphone.Manufacturer.Name
+            <div class="self-end">
+                <StarRating Rating="Smartphone.Rating" />
             </div>
         </div>
-        <div class="">
-            @Smartphone.Rating
+        <div class="rounded">
+            <img class="object-cover rounded-b-lg" loading="lazy" src="http://via.placeholder.com/200x200" style="height: 200px; width: 100%;" />
         </div>
     </div>
-    <div class="mx-auto">
-        <img class="object-cover" loading="lazy" src="http://via.placeholder.com/200x200" style="height: 200px; width: 200px;" />
-    </div>
-</div>
+</article>
 
 @code {
     [Parameter] public SmartphoneViewModel Smartphone { get; set; } = new();

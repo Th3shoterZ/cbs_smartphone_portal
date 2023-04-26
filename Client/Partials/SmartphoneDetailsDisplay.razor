@@ -1,0 +1,113 @@
+﻿@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
+
+
+@if (Smartphone == null)
+{
+    <div class="text-red-600 ">
+        <p>invalid data!</p>
+    </div>
+}
+else
+{
+
+    <div class="my-2 space-y-2 text-right">
+        <p>
+            Made by
+            @if (string.IsNullOrEmpty(Smartphone.Manufacturer.LinkToHomePage))
+            {
+                @Smartphone.Manufacturer.Name
+            }
+            else
+            {
+                <a class="text-blue-400 hover:underline hover:text-blue-600"
+                   href="@Smartphone.Manufacturer.LinkToHomePage">
+                    @Smartphone.Manufacturer.Name
+                </a>
+            }
+        </p>
+    </div>
+    <div class="border divide-y">
+        <div class="grid grid-cols-4 divide-x">
+            <div class="col-span-1 p-2">
+                Description
+            </div>
+            <div class="col-span-3 p-2">
+                <div class="flex flex-col">
+                    <div>
+                        @Smartphone.Description
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-4 divide-x">
+            <div class="col-span-1 p-2">
+                Category
+            </div>
+            <div class="col-span-3 p-2">
+                <div class="flex flex-col">
+                    <div>
+                        @Smartphone.Category.Name
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-4 divide-x">
+            <div class="col-span-1 p-2">
+                Resolution
+            </div>
+            <div class="col-span-3 p-2">
+                <div class="flex flex-col">
+                    <div>
+                        @Smartphone.Resolution
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-4 divide-x">
+            <div class="col-span-1 p-2">
+                Display Size
+            </div>
+            <div class="col-span-3 p-2">
+                <div class="flex flex-col">
+                    <div>
+                        @Smartphone.DisplaySize
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-4 divide-x">
+            <div class="col-span-1 p-2">
+                Weight
+            </div>
+            <div class="col-span-3 p-2">
+                <div class="flex flex-col">
+                    <div>
+                        @Smartphone.Weight
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-4 divide-x">
+            <div class="col-span-1 p-2">
+                Prozessor
+            </div>
+            <div class="col-span-3 p-2">
+                <div class="flex flex-col">
+                    <div>
+                        @Smartphone.Processor.Title
+                    </div>
+                    <div>
+                        @Smartphone.Processor.CoreCount Cores
+                    </div>
+                    <div>
+                        @Smartphone.Processor.Gigaherz
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public SmartphoneViewModel? Smartphone { get; set; }
+}

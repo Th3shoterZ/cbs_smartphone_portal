@@ -22,7 +22,7 @@ public class ReviewMapper : IMapper<Review, ReviewViewModel>
             Title = model.Title,
             UserId = model.UserId,
             SmartphoneId = model.SmartphoneId,
-            UserName = model.UserName
+            UserName = model.User.UserName
         };
 
         if (model.Comments != null && model.Comments.Count > 0)

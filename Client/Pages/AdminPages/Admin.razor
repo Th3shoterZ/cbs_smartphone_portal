@@ -10,6 +10,36 @@
     <div class="mt-10">
         <h3 class="text-3xl">Overview</h3>
         <hr />
+
+        <div class="mt-10">
+            <p>
+                Welcome to the Admin Panel. Here you get to maintain the data behind the application.
+                <br />
+                The tiles below are the currently available sections in the Admin section.
+                They are also accessible via the additional navbar at the top.
+            </p>
+        </div>
+
+        <div class="mt-10 grid grid-cols-12 gap-4">
+            <div class="sm:col-span-4 col-span-12">
+                <AdminPanelTile Link="/admin/users" Title="Users" />
+            </div>
+            <div class="sm:col-span-4 col-span-12">
+                <AdminPanelTile Link="/admin/phones" Title="Phones" />
+            </div>
+            <div class="sm:col-span-4 col-span-12">
+                <AdminPanelTile Link="/admin/processors" Title="Processors" />
+            </div>
+            <div class="sm:col-span-4 col-span-12">
+                <AdminPanelTile Link="/admin/manufacturer" Title="Manufacturer" />
+            </div>
+            <div class="sm:col-span-4 col-span-12">
+                <AdminPanelTile Link="/admin/categories" Title="Categories" />
+            </div>
+            <div class="sm:col-span-4 col-span-12">
+                <AdminPanelTile Disabled="true" Link="/admin/reviews" Title="Reviews/Comments" />
+            </div>
+        </div>
     </div>
 </div>
 

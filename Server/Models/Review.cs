@@ -10,6 +10,5 @@ public class Review
     public List<Comment> Comments { get; set; } = new();
     public List<Rating> Ratings { get; set; } = new();
     public string UserId { get; set; } = string.Empty;
-    public string UserName { get; set; } = string.Empty;
     public ApplicationUser User { get; set; } = new();
 }

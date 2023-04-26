@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartphonePortal_Vervoort_Wagner.Server.Interfaces;
+using SmartphonePortal_Vervoort_Wagner.Server.Models;
 using SmartphonePortal_Vervoort_Wagner.Shared.Requests;
+using SmartphonePortal_Vervoort_Wagner.Shared.Responses;
 using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 
 namespace SmartphonePortal_Vervoort_Wagner.Server.Controllers;
@@ -109,6 +111,22 @@ public class SmartphoneController : ControllerBase
         {
             await _smartphoneService.DeleteSmartphone(smartphoneId);
             return Ok();
+
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("details")]
+    public ActionResult<SmartphoneDetailsResponseModel> GetSmartphoneDetails([FromQuery] SmartphoneDetailsRequestModel request)
+    {
+        try
+        {
+            SmartphoneDetailsResponseModel result = _smartphoneService.GetSmartphoneDetails(request);
+            return Ok(result);
 
         }
         catch (Exception ex)

@@ -2,7 +2,11 @@
 
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @using SmartphonePortal_Vervoort_Wagner.Shared.Requests
+@using SmartphonePortal_Vervoort_Wagner.Shared.Responses
 @using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.Extensions.Primitives;
+
 
 @inject IHttpClientFactory ClientFactory
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -18,66 +22,20 @@ else
             <div class="mt-10 mx-auto max-w-3xl">
                 <h1 class="text-3xl">@Smartphone.Name</h1>
                 <hr />
-                <div class="my-2 space-y-2">
-                    <p>
-                        Made by
-                        @if (string.IsNullOrEmpty(Smartphone.Manufacturer.LinkToHomePage))
-                        {
-                            @Smartphone.Manufacturer.Name
-                        }
-                        else
-                        {
-                            <a class="text-blue-400 hover:underline hover:text-blue-600"
-                       href="@Smartphone.Manufacturer.LinkToHomePage">
-                                @Smartphone.Manufacturer.Name
-                            </a>
-                        }
-                    </p>
-                    <p>
-                        @Smartphone.Description
-                    </p>
-                    <p>
-                        Resoltion: @Smartphone.Resolution
-                    </p>
-                    <p>
-                        Display Size: @Smartphone.DisplaySize
-                    </p>
-                    <p>
-                        Weight: @Smartphone.Weight
-                    </p>
-                    <p>
-                        Rating: @Smartphone.Rating
-                    </p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-xl">Category</h4>
-                    <p>
-                        @Smartphone.Category.Name
-                    </p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-xl">Prozessor</h4>
-                    <p>
-                        @Smartphone.Processor.Title
-                    </p>
-                    <p>
-                        @Smartphone.Processor.CoreCount
-                    </p>
-                    <p>
-                        @Smartphone.Processor.Gigaherz
-                    </p>
+                <div class="my-10">
+                    <SmartphoneDetailsDisplay Smartphone="Smartphone" />
                 </div>
             </div>
         </div>
         <AuthorizeView>
             @if (UserCanReview)
             {
-                <div class="mt-10 mx-auto max-w-lg">
+                <div class="mt-10 mx-auto max-w-3xl">
                     <CreateReviewCard SmartphoneId="@SmartphoneId" OnReviewSubmitted="OnReviewSubmitted" />
                 </div>
             }
         </AuthorizeView>
-        <div class="mt-10 mx-auto max-w-lg space-y-2">
+        <div class="mt-10 mx-auto max-w-3xl space-y-5">
             @foreach (var review in Reviews)
             {
                 <ReviewCard Review="review" />
@@ -92,44 +50,63 @@ else
     public SmartphoneViewModel Smartphone { get; set; } = new();
     public bool IsRequestInProcess { get; set; }
     public List<ReviewViewModel> Reviews { get; set; } = new();
-    private HttpClient? _client;
+    public ReviewViewModel? UserReview { get; set; }
     public bool UserCanReview { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
-        _client = ClientFactory.CreateClient("AnonymousApi");
-
         IsRequestInProcess = true;
         try
         {
-            UserCanReview = await UserCanLeaveReview();
-            Smartphone = await _client.GetFromJsonAsync<SmartphoneViewModel>($"/api/Smartphone/{SmartphoneId}") ?? new();
-            await FetchReviews();
-
+            await FetchData();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
         }
-        IsRequestInProcess = false;
-
         await base.OnInitializedAsync();
+
+        IsRequestInProcess = false;
+    }
+
+    private async Task FetchData()
+    {
+        var client = ClientFactory.CreateClient("AnonymousApi");
+
+        var authstate = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        string query = QueryHelpers.AddQueryString("/api/Smartphone/details", new Dictionary<string, string?>() {
+                { "smartphoneId", SmartphoneId.ToString() },
+                { "userId",  authstate.User.FindFirst(c => c.Type == "sub")?.Value } // user Id apparently stored under the "sub" type
+            });
+        var response = await client.GetFromJsonAsync<SmartphoneDetailsResponseModel>(query);
+
+        if (response != null)
+        {
+            Smartphone = response.Smartphone;
+            Reviews = response.Reviews;
+            UserReview = response.UserReview;
+        }
+
+        UserCanReview = await UserCanLeaveReview();
     }
 
     private async Task<bool> UserCanLeaveReview()
     {
         var authstate = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authstate.User;
-        return Convert.ToBoolean(authstate.User?.Identity?.IsAuthenticated);
+        bool isAuthenticated = Convert.ToBoolean(authstate.User?.Identity?.IsAuthenticated);
+        return isAuthenticated && UserReview == null;
     }
 
     private async Task FetchReviews()
     {
-        if (_client == null) return;
+        var client = ClientFactory.CreateClient("AnonymousApi");
+
+        if (client == null) return;
         try
         {
-            Reviews = await _client.GetFromJsonAsync<List<ReviewViewModel>>($"/api/Review/smartphone/{SmartphoneId}") ?? new();
+            Reviews = await client.GetFromJsonAsync<List<ReviewViewModel>>($"/api/Review/smartphone/{SmartphoneId}") ?? new();
 
         }
         catch (Exception ex)
@@ -140,7 +117,10 @@ else
 
     private async Task OnReviewSubmitted()
     {
-        await FetchReviews();
+
+        IsRequestInProcess = true;
+        await FetchData();
+        IsRequestInProcess = false;
     }
 }
 

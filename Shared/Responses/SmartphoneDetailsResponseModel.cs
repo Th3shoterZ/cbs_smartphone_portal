@@ -1,6 +1,6 @@
 ﻿using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
 
-namespace SmartphonePortal_Vervoort_Wagner.Shared.ResponseModel;
+namespace SmartphonePortal_Vervoort_Wagner.Shared.Responses;
 
 public class SmartphoneDetailsResponseModel
 {

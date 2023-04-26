@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SmartphonePortal_Vervoort_Wagner.Server.Data;
 using SmartphonePortal_Vervoort_Wagner.Server.Interfaces;
 using SmartphonePortal_Vervoort_Wagner.Server.Models;
@@ -32,7 +33,12 @@ public class ReviewService : IReviewService
 
     public List<ReviewViewModel> GetReviewsForSmartphone(int smartphoneId)
     {
-        var reviews = _dbContext.Reviews.Where(x => x.SmartphoneId == smartphoneId).ToList();
+        var reviews = _dbContext.Reviews
+            .Include(x => x.Comments)
+            .Include(x => x.User)
+            .Where(x => x.SmartphoneId == smartphoneId)
+            .ToList();
+
         List<ReviewViewModel> result = new();
         if (reviews == null) return result;
 
@@ -45,7 +51,12 @@ public class ReviewService : IReviewService
 
     public List<ReviewViewModel> GetReviewsForUser(string userId)
     {
-        var reviews = _dbContext.Reviews.Where(x => x.UserId.Equals(userId)).ToList();
+        var reviews = _dbContext.Reviews
+            .Include(x => x.Comments)
+            .Include(x => x.User)
+            .Where(x => x.UserId.Equals(userId))
+            .ToList();
+
         List<ReviewViewModel> result = new();
         if (reviews == null) return result;
 
@@ -59,7 +70,13 @@ public class ReviewService : IReviewService
     public List<ReviewViewModel> GetAllReviews()
     {
         List<ReviewViewModel> result = new List<ReviewViewModel>();
-        foreach (Review review in _dbContext.Reviews.ToList())
+
+        var reviews = _dbContext.Reviews
+            .Include(x => x.Comments)
+            .Include(x => x.User)
+            .ToList();
+
+        foreach (Review review in reviews)
         {
             result.Add(_mapper.GetMappedResult(review));
         }
@@ -68,7 +85,7 @@ public class ReviewService : IReviewService
 
     public async Task CreateReview(ReviewCreationRequest request)
     {
-        Smartphone? smartphone = _dbContext.Smartphones.FirstOrDefault(x=>x.SmartphoneId == request.SmartphoneId);
+        Smartphone? smartphone = _dbContext.Smartphones.FirstOrDefault(x => x.SmartphoneId == request.SmartphoneId);
         ApplicationUser? user = _dbContext.Users.FirstOrDefault(x => x.Id.Equals(request.UserId));
         if (user == null || smartphone == null) throw new Exception("user and/or smartphone not found");
 
@@ -77,7 +94,6 @@ public class ReviewService : IReviewService
             Text = request.Text,
             Title = request.Title,
             Smartphone = smartphone,
-            UserName = user.UserName,
             User = user,
         };
         _dbContext.Reviews.Add(review);
@@ -100,7 +116,7 @@ public class ReviewService : IReviewService
 
     public async Task DeleteReview(int id)
     {
-        var review = _dbContext.Reviews.FirstOrDefault(x => x.ReviewId ==id);
+        var review = _dbContext.Reviews.FirstOrDefault(x => x.ReviewId == id);
         if (review == null || review.ReviewId == 0) return;
         _dbContext.Reviews.Remove(review);
         await _dbContext.SaveChangesAsync();

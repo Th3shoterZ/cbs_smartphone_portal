@@ -342,7 +342,6 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Migrations
                     Text = table.Column<string>(type: "longtext", nullable: false),
                     SmartphoneId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    UserName = table.Column<string>(type: "longtext", nullable: false)
                 },
                 constraints: table =>
                 {
