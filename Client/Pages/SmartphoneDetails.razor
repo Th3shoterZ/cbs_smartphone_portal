@@ -103,7 +103,7 @@ else
         IsRequestInProcess = true;
         try
         {
-            UserCanReview = UserCanLeaveReview();
+            UserCanReview = await UserCanLeaveReview();
             Smartphone = await _client.GetFromJsonAsync<SmartphoneViewModel>($"/api/Smartphone/{SmartphoneId}") ?? new();
             await FetchReviews();
 
@@ -117,15 +117,11 @@ else
         await base.OnInitializedAsync();
     }
 
-    private bool UserCanLeaveReview()
+    private async Task<bool> UserCanLeaveReview()
     {
-        //var authstate = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        //var user = authstate.User;
-        //if (Convert.ToBoolean(authstate.User?.Identity?.IsAuthenticated))
-        //{
-        //    NewReview.UserId = user.FindFirst(c => c.Type == "sub")?.Value ?? string.Empty;
-        //}
-        return true;
+        var authstate = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authstate.User;
+        return Convert.ToBoolean(authstate.User?.Identity?.IsAuthenticated);
     }
 
     private async Task FetchReviews()
