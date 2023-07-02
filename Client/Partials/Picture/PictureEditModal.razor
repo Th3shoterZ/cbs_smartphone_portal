@@ -7,7 +7,7 @@
     <div class="fixed absolute z-45 w-full sm:p-4 overflow-x-hidden overflow-y-auto md:inset-0 md:h-full bg-gradient-to-r from-transparent via-gray-500 to-transparent"
          id="defaultModal"
          tabindex="-1">
-        @*<div class="relative w-full h-full max-w-2xl md:h-auto mx-auto">
+        <div class="relative w-full h-full max-w-2xl md:h-auto mx-auto">
 
             <!-- Modal content -->
             <div class="relative bg-gray-100 rounded-lg shadow">
@@ -15,7 +15,7 @@
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t">
                     <h3 class="text-xl font-semibold text-gray-900">
-                        Edit User
+                        Edit Picture
                     </h3>
                     <button class="text-gray-500 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                             type="button"
@@ -31,7 +31,7 @@
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
 
-                    <div class="flex flex-col my-2">
+                   @* <div class="flex flex-col my-2">
                         <label class="block mb-2 text-gray-900" for="username_input">
                             Username
                         </label>
@@ -70,7 +70,7 @@
                         <div class="text-sm text-red-600">
                             <ValidationMessage For=@( () => ProfileUpdate.Role) />
                         </div>
-                    </div>
+                    </div>*@
                 </div>
 
                 <!-- Modal footer -->
@@ -87,7 +87,7 @@
                     </button>
                 </div>
             </div>
-        </div>*@
+        </div>
     </div>
 </EditForm>
 
