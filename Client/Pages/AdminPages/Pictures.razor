@@ -1,0 +1,174 @@
+﻿@page "/admin/pictures"
+
+@using Microsoft.AspNetCore.Authorization
+@using SmartphonePortal_Vervoort_Wagner.Client.Partials
+@using SmartphonePortal_Vervoort_Wagner.Client.Partials.Picture
+@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
+@using System.Text.Json
+@attribute [Authorize(Roles = "Admin")]
+@inject HttpClient Client;
+
+@layout AdminLayout
+
+<div class="max-w-3xl mx-auto">
+    <div class="mt-10">
+        <h3 class="text-3xl">Pictures</h3>
+        <hr />
+    </div>
+
+    <div class="mt-10">
+        @if (IsDataFetched)
+        {
+            @if (!string.IsNullOrEmpty(Error))
+            {
+                <div class="flex h-20 bg-red-100 rounded-lg text-center text-xl font-bold my-5">
+                    <p class="m-2">
+                        @Error
+                    </p>
+                </div>
+            }
+
+            @if (IsEditModalOpen)
+            {
+                <PictureEditModal OnClose="@OnEditModalClose" Picture="PictureToEdit" />
+            }
+            @if (IsAddModalOpen)
+            {
+                <PictureAddModal OnClose="@OnAddModalClose" />
+            }
+            @if (IsDeleteModalOpen)
+            {
+                <PictureDeleteModal OnClose="@OnDeleteModalClose" Picture="PictureToDelete" />
+            }
+
+
+            <div class="divide-y">
+
+                <div class="grid grid-cols-12 divide-x overflow-hidden font-bold">
+                    <div class="h-10 px-2 pt-2 overflow-hidden">
+                        Id
+                    </div>
+                    <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
+                        Title
+                    </div>
+                    <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
+                        Path
+                    </div>
+                    <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
+                        SmartphoneId
+                    </div>
+                    <div class="h-10 text-center flex justify-center col-span-2 overflow-hidden">
+                        <button class="w-full hover:bg-green-300"
+                            @onclick=@OpenAddModal>
+                            <i class="fa-solid fa-square-plus fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                @foreach (var picture in PictureModels)
+                {
+                    <div class="grid grid-cols-12 divide-x overflow-hidden">
+                        <div class="h-10 px-2 pt-2 overflow-hidden">
+                            @picture.PictureId
+                        </div>
+                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
+                            @picture.Title
+                        </div>
+                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
+                            @picture.PathToData
+                        </div>
+                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
+                            @picture.SmartphoneId
+                        </div>
+                        <div class="flex h-10 divide-x col-span-2 overflow-hidden">
+                            <button class="flex-1 hover:bg-sky-400 focus:bg-sky-400 transition ease-in-out" @onclick="() => OpenEditModal(picture)"><i class="fa-solid fa-pen"></i></button>
+                            <button class="flex-1 hover:bg-red-400 focus:bg-red-400 transition ease-in-out" @onclick="() => OpenDeleteModal(picture)"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <Loader />
+        }
+
+        <hr />
+
+    </div>
+</div>
+
+@code {
+    public List<PictureViewModel> PictureModels { get; set; } = new();
+    public bool IsDataFetched { get; set; } = false;
+    public string Error { get; set; } = string.Empty;
+    public bool IsEditModalOpen { get; set; }
+    public bool IsAddModalOpen { get; set; }
+    public bool IsDeleteModalOpen { get; set; }
+
+    public PictureViewModel PictureToEdit { get; set; } = new();
+    public PictureViewModel PictureToDelete { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchPictures();
+        await base.OnInitializedAsync();
+    }
+
+
+    // Edit Processor Modal handling
+    public async void OnEditModalClose()
+    {
+        IsEditModalOpen = false;
+        await FetchPictures();
+    }
+    public void OpenEditModal(PictureViewModel picture)
+    {
+        PictureToEdit = picture;
+        IsEditModalOpen = true;
+        return;
+    }
+
+    // Add Processor Modal handling
+    public async void OnAddModalClose()
+    {
+        IsAddModalOpen = false;
+        await FetchPictures();
+    }
+    public void OpenAddModal()
+    {
+        IsAddModalOpen = true;
+        return;
+    }
+
+    // Delete Processor Modal handling
+    public async void OnDeleteModalClose()
+    {
+        IsDeleteModalOpen = false;
+        await FetchPictures();
+    }
+    public void OpenDeleteModal(PictureViewModel picture)
+    {
+        PictureToDelete = picture;
+        IsDeleteModalOpen = true;
+        return;
+    }
+
+
+    private async Task FetchPictures()
+    {
+        try
+        {
+            PictureModels = await Client.GetFromJsonAsync<List<PictureViewModel>>("/api/Picture/alls") ?? new();
+            this.StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            // idk
+            Error = "Some Error occurred: " + ex.Message;
+        }
+        finally
+        {
+            IsDataFetched = true;
+        }
+    }
+}

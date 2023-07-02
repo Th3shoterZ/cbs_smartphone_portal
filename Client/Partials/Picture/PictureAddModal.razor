@@ -1,0 +1,230 @@
+﻿@using SmartphonePortal_Vervoort_Wagner.Shared.Requests
+@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
+@using SmartphonePortal_Vervoort_Wagner.Shared.Responses
+@using SmartphonePortal_Vervoort_Wagner.Shared.DataModel
+@using System.Net.Http.Headers
+@inject HttpClient Client
+
+<EditForm EditContext=@editContext>
+    <!-- Main modal -->
+    <div class="fixed absolute z-45 w-full sm:p-4 overflow-x-hidden overflow-y-auto md:inset-0 md:h-full bg-gradient-to-r from-transparent via-gray-500 to-transparent"
+         id="defaultModal"
+         tabindex="-1">
+        <div class="relative w-full h-full max-w-2xl md:h-auto mx-auto">
+
+            <!-- Modal content -->
+            <div class="relative bg-gray-100 rounded-lg shadow">
+
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b rounded-t">
+                    <h3 class="text-xl font-semibold text-gray-900">
+                        Add User
+                    </h3>
+                    <button class="text-gray-500 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                            type="button"
+                            @onclick=@Cancel>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                @if (RequestInProcess)
+                {
+                    <Loader />
+                }
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+
+                   @* <div class="flex flex-col my-2">
+                        <label class="block mb-2 text-gray-900" for="username_input">
+                            Username
+                        </label>
+                        <InputText class="px-2 rounded border border-gray-400 bg-white h-10"
+                                   id="username_input"
+                                   type="text"
+                                   @bind-Value="@Profile.UserName" />
+                        <div class="text-sm text-red-600">
+                            <ValidationMessage For=@( () => Profile.UserName) />
+                        </div>
+                    </div>
+                    <div class="flex flex-col my-2">
+                        <label class="block mb-2 text-gray-900" for="email_input">
+                            E-Mail
+                        </label>
+                        <InputText class="px-2 rounded border border-gray-400 bg-white h-10"
+                                   id="email_input"
+                                   type="email"
+                                   @bind-Value="@Profile.Email" />
+                        <div class="text-sm text-red-600">
+                            <ValidationMessage For=@( () => Profile.Email) />
+                        </div>
+                    </div>
+                    <div class="flex flex-col my-2">
+                        <label class="block mb-2 text-gray-900" for="pw_input">
+                            Password
+                        </label>
+                        <InputText class="px-2 rounded border border-gray-400 bg-white h-10"
+                                   id="pw_input"
+                                   type="password"
+                                   @bind-Value="@Profile.Password" />
+                        <div class="text-sm text-red-600">
+                            <ValidationMessage For=@( () => Profile.Password) />
+                        </div>
+                    </div>
+                    <div class="flex flex-col my-2">
+                        <label for="roles" class="block mb-2 text-gray-900">
+                            Select an option
+                        </label>
+                        <InputSelect class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                                     @bind-Value="@Profile.Role">
+                            <option selected disabled value="">please select a role</option>
+                            @foreach (var role in Roles)
+                            {
+                                <option value="@role">@role</option>
+                            }
+                        </InputSelect>
+                        <div class="text-sm text-red-600">
+                            <ValidationMessage For=@( () => Profile.Role) />
+                        </div>
+                    </div>*@
+                </div>
+
+                <!-- Modal footer -->
+                <div class="flex justify-end p-6 space-x-2 border-t border-gray-200 rounded-b">
+                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                            type="submit"
+                            @onclick=@Save>
+                        Save
+                    </button>
+                    <button class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
+                            type="button"
+                            @onclick=@Cancel>
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+    [Parameter] public List<string> Roles { get; set; } = new();
+
+    public PictureCreationRequest Picture { get; set; } = new();
+    public bool RequestInProcess { get; set; }
+
+    private EditContext? editContext;
+
+    private List<ImageFile> files = new();
+    private List<FileUploadResponse> uploadResults = new();
+    private int maxAllowedFiles = 3;
+    private bool shouldRender;
+
+    protected override Task OnInitializedAsync()
+    {
+        editContext = new(Picture);
+        editContext.EnableDataAnnotationsValidation();
+
+        return base.OnInitializedAsync();
+    }
+
+    private Task Cancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+    private async Task Save()
+    {
+        if (editContext == null)
+        {
+            Console.WriteLine("Editcontext was null in PictureAddModal");
+            return;
+        }
+
+        if (!editContext.Validate())
+        {
+            return;
+        }
+
+        RequestInProcess = true;
+
+        var response = await Client.PostAsync("/api/Picture/create", JsonContent.Create<PictureCreationRequest>(Picture));
+        RequestInProcess = false;
+        await OnClose.InvokeAsync(true);
+    }
+
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        shouldRender = false;
+        long maxFileSize = 1024 * 15;
+        var upload = false;
+
+        using var content = new MultipartFormDataContent();
+
+        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            if (uploadResults.SingleOrDefault(
+                f => f.FileName == file.Name) is null)
+            {
+                try
+                {
+                    files.Add(new() { FileName = file.Name });
+
+                    var fileContent =
+                        new StreamContent(file.OpenReadStream(maxFileSize));
+
+                    fileContent.Headers.ContentType =
+                        new MediaTypeHeaderValue(file.ContentType);
+
+                    content.Add(
+                        content: fileContent,
+                        name: "\"files\"",
+                        fileName: file.Name);
+
+                    upload = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"{file.Name} not uploaded (Err: 6): {ex.Message}");
+
+                    uploadResults.Add(
+                        new()
+                            {
+                                FileName = file.Name,
+                                ErrorCode = 6,
+                                Uploaded = false
+                            });
+                }
+            }
+        }
+
+        if (upload)
+        {
+            var response = await Client.PostAsync("/api/Smartphone/addpicture", content);
+
+            var newUploadResults = await response.Content
+                .ReadFromJsonAsync<IList<FileUploadResponse>>();
+
+            if (newUploadResults is not null)
+            {
+                uploadResults = uploadResults.Concat(newUploadResults).ToList();
+            }
+        }
+
+        shouldRender = true;
+    }
+
+    private static bool FileUpload(IList<FileUploadResponse> uploadResults,
+        string? fileName, out FileUploadResponse result)
+    {
+        result = uploadResults.SingleOrDefault(f => f.FileName == fileName) ?? new();
+
+        if (!result.Uploaded)
+        {
+            Console.WriteLine($"{result.FileName} not uploaded (Err: 5)");
+            result.ErrorCode = 5;
+        }
+
+        return result.Uploaded;
+    }
+}

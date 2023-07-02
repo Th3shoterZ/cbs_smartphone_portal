@@ -145,31 +145,6 @@
                             <ValidationMessage For=@( () => SmartphoneUpdate.CategoryId) />
                         </div>
                     </div>
-                    <div class="flex flex-col my-2">
-                        <InputFile OnChange="@OnInputFileChange" multiple />
-                        <ul>
-                            @foreach (var file in files)
-                            {
-                                <li>
-                                    File: @file.FileName
-                                    <br>
-                                    @if (FileUpload(uploadResults, file.FileName, out var result))
-                                    {
-                                        <span>
-                                            Stored File Name: @result.StoredFileName
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span>
-                                            There was an error uploading the file
-                                            (Error: @result.ErrorCode).
-                                        </span>
-                                    }
-                                </li>
-                            }
-                        </ul>
-                    </div>
                 </div>
 
                 <!-- Modal footer -->
@@ -202,10 +177,7 @@
 
     private EditContext? editContext;
 
-    private List<ImageFile> files = new();
-    private List<FileUploadResponse> uploadResults = new();
-    private int maxAllowedFiles = 3;
-    private bool shouldRender;
+   
 
     protected override Task OnInitializedAsync()
     {
@@ -251,80 +223,5 @@
         var response = await Client.PostAsync("/api/Smartphone/update", JsonContent.Create<SmartphoneUpdateRequest>(SmartphoneUpdate));
         RequestInProcess = false;
         await OnClose.InvokeAsync(true);
-    }
-
-    private async Task OnInputFileChange(InputFileChangeEventArgs e)
-    {
-        shouldRender = false;
-        long maxFileSize = 1024 * 15;
-        var upload = false;
-
-        using var content = new MultipartFormDataContent();
-
-        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
-        {
-            if (uploadResults.SingleOrDefault(
-                f => f.FileName == file.Name) is null)
-            {
-                try
-                {
-                    files.Add(new() { FileName = file.Name });
-
-                    var fileContent =
-                        new StreamContent(file.OpenReadStream(maxFileSize));
-
-                    fileContent.Headers.ContentType =
-                        new MediaTypeHeaderValue(file.ContentType);
-
-                    content.Add(
-                        content: fileContent,
-                        name: "\"files\"",
-                        fileName: file.Name);
-
-                    upload = true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"{file.Name} not uploaded (Err: 6): {ex.Message}");
-
-                    uploadResults.Add(
-                        new()
-                            {
-                                FileName = file.Name,
-                                ErrorCode = 6,
-                                Uploaded = false
-                            });
-                }
-            }
-        }
-
-        if (upload)
-        {
-            var response = await Client.PostAsync("/api/Smartphone/addpicture", content);
-
-            var newUploadResults = await response.Content
-                .ReadFromJsonAsync<IList<FileUploadResponse>>();
-
-            if (newUploadResults is not null)
-            {
-                uploadResults = uploadResults.Concat(newUploadResults).ToList();
-            }
-        }
-
-        shouldRender = true;
-    }
-
-    private static bool FileUpload(IList<FileUploadResponse> uploadResults,
-        string? fileName, out FileUploadResponse result)
-    {
-        result = uploadResults.SingleOrDefault(f => f.FileName == fileName) ?? new();
-
-        if (!result.Uploaded)
-        {
-            Console.WriteLine($"{result.FileName} not uploaded (Err: 5)");
-            result.ErrorCode = 5;
-        }
-
-        return result.Uploaded;
     }
 }
