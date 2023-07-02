@@ -41,4 +41,9 @@
 		</PackageReference>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Content\" />
+	  <Folder Include="Content\Pictures\" />
+	</ItemGroup>
+
 </Project>
