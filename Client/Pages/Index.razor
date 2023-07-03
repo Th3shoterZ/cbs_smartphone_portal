@@ -23,8 +23,22 @@
         }
         else
         {
+            <div class="mb-10">
+                <label for="roles" class="block mb-2 text-gray-900">
+                    Select a category
+                </label>
+                <select class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                    @onchange="OnCategoryChange">
+                    <option selected disabled value="">please select a phone</option>
+                    @foreach (var cat in Categories)
+                    {
+                        <option value="@cat.CategoryId">@cat.Name</option>
+                    }
+                </select>
+            </div>
+
             <div class="grid grid-cols-12 gap-4">
-                @foreach (var smartphone in Smartphones)
+                @foreach (var smartphone in FilteredSmartphones)
                 {
                     <div class="sm:col-span-4 col-span-12">
                         <SmartphoneCard Smartphone="smartphone" />
@@ -33,13 +47,17 @@
             </div>
         }
     </div>
-
 </div>
 
 @code {
     public List<SmartphoneViewModel> Smartphones { get; set; } = new();
+    public List<SmartphoneViewModel> FilteredSmartphones { get; set; } = new();
+    public List<CategoryViewModel> Categories { get; set; } = new();
+    public int SelectedCategory { get; set; } = new();
     public bool IsRequestInProcess { get; set; }
     private HttpClient? _client;
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -48,6 +66,13 @@
         try
         {
             Smartphones = await _client.GetFromJsonAsync<List<SmartphoneViewModel>>("/api/Smartphone/all") ?? new();
+            FilteredSmartphones = Smartphones;
+            Categories = await _client.GetFromJsonAsync<List<CategoryViewModel>>("/api/Category/alls") ?? new();
+            Categories.Insert(0, new CategoryViewModel
+                {
+                    CategoryId = 0,
+                    Name = "All"
+                });
         }
         catch (Exception ex)
         {
@@ -56,5 +81,22 @@
         IsRequestInProcess = false;
 
         await base.OnInitializedAsync();
+    }
+
+    public void OnCategoryChange(ChangeEventArgs args)
+    {
+        Console.WriteLine("hello?");
+        Console.WriteLine();
+
+        var newVal = 0;
+        if (args != null && args.Value != null)
+        {
+            newVal = int.Parse(args.Value.ToString() ?? "");
+        }
+
+        SelectedCategory = newVal;
+        FilteredSmartphones = newVal > 0
+        ? FilteredSmartphones = Smartphones.Where(x => x.Category.CategoryId.Equals(SelectedCategory)).ToList()
+        : FilteredSmartphones = Smartphones;
     }
 }
