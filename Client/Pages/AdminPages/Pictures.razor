@@ -30,11 +30,11 @@
 
             @if (IsEditModalOpen)
             {
-                <PictureEditModal OnClose="@OnEditModalClose" Picture="PictureToEdit" />
+                <PictureEditModal OnClose="@OnEditModalClose" Phones="SmartphoneModels" Picture="PictureToEdit" />
             }
             @if (IsAddModalOpen)
             {
-                <PictureAddModal OnClose="@OnAddModalClose" />
+                <PictureAddModal OnClose="@OnAddModalClose" Phones="SmartphoneModels" />
             }
             @if (IsDeleteModalOpen)
             {
@@ -99,6 +99,7 @@
 
 @code {
     public List<PictureViewModel> PictureModels { get; set; } = new();
+    public List<SmartphoneViewModel> SmartphoneModels { get; set; } = new();
     public bool IsDataFetched { get; set; } = false;
     public string Error { get; set; } = string.Empty;
     public bool IsEditModalOpen { get; set; }
@@ -110,6 +111,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await FetchSmartphones();
         await FetchPictures();
         await base.OnInitializedAsync();
     }
@@ -153,11 +155,26 @@
         return;
     }
 
+    private async Task FetchSmartphones()
+    {
+        try
+        {
+
+            SmartphoneModels = await Client.GetFromJsonAsync<List<SmartphoneViewModel>>("/api/Smartphone/all") ?? new();
+            this.StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            // idk
+            Error = "Some Error occurred: " + ex.Message;
+        }
+    }
 
     private async Task FetchPictures()
     {
         try
         {
+
             PictureModels = await Client.GetFromJsonAsync<List<PictureViewModel>>("/api/Picture/alls") ?? new();
             this.StateHasChanged();
         }

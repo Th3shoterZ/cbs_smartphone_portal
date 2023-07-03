@@ -7,8 +7,8 @@
 <PageTitle>Smartphone Portal</PageTitle>
 
 <div>
-    <div class="mt-10 mx-auto max-w-lg">
-        <h1 class="text-3xl">Smartphone Portal!</h1>
+    <div class="mt-10 mx-auto max-w-lg text-center">
+        <h1 class="text-6xl">Smartphone Portal!</h1>
 
         <div class="mt-2">
             <p>
@@ -23,13 +23,13 @@
         }
         else
         {
-            <div class="mb-10">
+            <div class="mb-10 max-w-sm">
                 <label for="roles" class="block mb-2 text-gray-900">
                     Select a category
                 </label>
                 <select class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                     @onchange="OnCategoryChange">
-                    <option selected disabled value="">please select a phone</option>
+                    <option selected disabled value="">please select a category</option>
                     @foreach (var cat in Categories)
                     {
                         <option value="@cat.CategoryId">@cat.Name</option>

@@ -42,8 +42,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Content\" />
-	  <Folder Include="Content\Pictures\" />
+	  <Folder Include="wwwroot\Content\" />
+	  <Folder Include="wwwroot\Content\Pictures\Development\" />
 	</ItemGroup>
 
 </Project>

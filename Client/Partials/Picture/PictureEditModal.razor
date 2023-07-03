@@ -1,5 +1,8 @@
 ﻿@using SmartphonePortal_Vervoort_Wagner.Shared.Requests
 @using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
+@using SmartphonePortal_Vervoort_Wagner.Shared.Responses
+@using SmartphonePortal_Vervoort_Wagner.Shared.DataModel
+@using System.Net.Http.Headers
 @inject HttpClient Client
 
 <EditForm EditContext="@editContext">
@@ -31,46 +34,49 @@
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
 
-                   @* <div class="flex flex-col my-2">
-                        <label class="block mb-2 text-gray-900" for="username_input">
-                            Username
-                        </label>
-                        <InputText class="px-2 rounded border border-gray-400 bg-white h-10"
-                                   id="username_input"
-                                   type="text"
-                                   @bind-Value="@ProfileUpdate.UserName" />
-                        <div class="text-sm text-red-600">
-                            <ValidationMessage For=@( () => ProfileUpdate.UserName) />
-                        </div>
-                    </div>
-                    <div class="flex flex-col my-2">
-                        <label class="block mb-2 text-gray-900" for="email_input">
-                            E-Mail
-                        </label>
-                        <InputText class="px-2 rounded border border-gray-400 bg-white h-10"
-                                   id="email_input"
-                                   type="email"
-                                   @bind-Value="@ProfileUpdate.Email" />
-                        <div class="text-sm text-red-600">
-                            <ValidationMessage For=@( () => ProfileUpdate.Email) />
-                        </div>
-                    </div>
+
                     <div class="flex flex-col my-2">
                         <label for="roles" class="block mb-2 text-gray-900">
                             Select an option
                         </label>
-                        <InputSelect class="bg-whtie border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                                     @bind-Value="@ProfileUpdate.Role">
-                            <option disabled value="">please select a role</option>
-                            @foreach (var role in Roles)
+                        <InputSelect class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                                     @bind-Value="@Picture.SmartphoneId">
+                            <option selected disabled value="">please select a phone</option>
+                            @foreach (var phone in Phones)
                             {
-                                <option value="@role">@role</option>
+                                <option value="@phone.SmartphoneId">@phone.Name</option>
                             }
                         </InputSelect>
                         <div class="text-sm text-red-600">
-                            <ValidationMessage For=@( () => ProfileUpdate.Role) />
+                            <ValidationMessage For=@( () => Picture.SmartphoneId) />
                         </div>
-                    </div>*@
+                    </div>
+                    <div class="flex flex-col my-2">
+                        <InputFile OnChange="@OnInputFileChange" multiple />
+                        <ul>
+                            @foreach (var file in files)
+                            {
+                                <li>
+                                    File: @file.FileName
+                                    <br>
+                                    @if (FileUpload(uploadResults, file.FileName,
+                                   out var result))
+                                    {
+                                        <span>
+                                            Stored File Name: @result.StoredFileName
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            There was an error uploading the file
+                                            (Error: @result.ErrorCode).
+                                        </span>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- Modal footer -->
@@ -93,13 +99,22 @@
 
 @code {
     [Parameter] public EventCallback<bool> OnClose { get; set; }
-    [Parameter] public List<string> Roles { get; set; } = new();
+    [Parameter] public List<SmartphoneViewModel> Phones { get; set; } = new();
     [Parameter] public PictureViewModel Picture { get; set; } = new();
 
     public PictureUpdateRequest PictureUpdate { get; set; } = new();
     public bool RequestInProcess { get; set; }
 
     private EditContext? editContext;
+
+    private bool UploadFiles { get; set; }
+    private List<ImageFile> files = new();
+    private List<FileUploadResponse> uploadResults = new();
+    private int maxAllowedFiles = 1;
+    private bool shouldRender;
+
+    private MultipartFormDataContent Content { get; set; } = new();
+
 
     protected override Task OnInitializedAsync()
     {
@@ -135,8 +150,90 @@
 
 
         RequestInProcess = true;
-        var response = await Client.PostAsync("/api/Picture/update", JsonContent.Create<PictureUpdateRequest>(PictureUpdate));
+        await UploadFile();
+        //var response = await Client.PostAsync("/api/Picture/update", JsonContent.Create<PictureUpdateRequest>(PictureUpdate));
         RequestInProcess = false;
         await OnClose.InvokeAsync(true);
+    }
+
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        shouldRender = false;
+        //long maxFileSize = 1024 * 15;
+        UploadFiles = false;
+
+        var content = new MultipartFormDataContent();
+
+        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            if (uploadResults.SingleOrDefault(
+                f => f.FileName == file.Name) is null)
+            {
+                try
+                {
+                    files.Add(new() { FileName = file.Name });
+
+                    var fileContent =
+                        new StreamContent(file.OpenReadStream());
+
+                    fileContent.Headers.ContentType =
+                        new MediaTypeHeaderValue(file.ContentType);
+
+                    content.Add(
+                        content: fileContent,
+                        name: "\"files\"",
+                        fileName: file.Name);
+
+                    Content = content;
+                    UploadFiles = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"{file.Name} not uploaded (Err: 6): {ex.Message}");
+
+                    uploadResults.Add(
+                        new()
+                            {
+                                FileName = file.Name,
+                                ErrorCode = 6,
+                                Uploaded = false
+                            });
+                }
+            }
+        }
+
+        shouldRender = true;
+    }
+
+    private async Task UploadFile()
+    {
+        if (UploadFiles)
+        {
+            Console.WriteLine("uploading");
+            var response = await Client.PostAsync($"/api/Picture/update/{Picture.SmartphoneId}/{Picture.PictureId}", Content);
+
+            var newUploadResults = await response.Content
+                .ReadFromJsonAsync<IList<FileUploadResponse>>();
+
+            if (newUploadResults is not null)
+            {
+                uploadResults = uploadResults.Concat(newUploadResults).ToList();
+            }
+        }
+    }
+
+    private static bool FileUpload(IList<FileUploadResponse> uploadResults,
+        string? fileName, out FileUploadResponse result)
+    {
+        result = uploadResults.SingleOrDefault(f => f.FileName == fileName) ?? new();
+
+        if (!result.Uploaded)
+        {
+            Console.WriteLine($"{result.FileName} not uploaded (Err: 5)");
+            result.ErrorCode = 5;
+        }
+
+        return result.Uploaded;
     }
 }

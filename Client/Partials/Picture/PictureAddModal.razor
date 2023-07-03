@@ -35,19 +35,6 @@
                 <div class="p-6 space-y-6">
 
                     <div class="flex flex-col my-2">
-                        <label class="block mb-2 text-gray-900" for="username_input">
-                            Title
-                        </label>
-                        <InputText class="px-2 rounded border border-gray-400 bg-white h-10"
-                                   id="title_input"
-                                   type="text"
-                                   @bind-Value="@Picture.Title" />
-                        <div class="text-sm text-red-600">
-                            <ValidationMessage For=@( () => Picture.Title) />
-                        </div>
-                    </div>
-                  
-                    <div class="flex flex-col my-2">
                         <label for="roles" class="block mb-2 text-gray-900">
                             Select an option
                         </label>
@@ -56,7 +43,7 @@
                             <option selected disabled value="">please select a phone</option>
                             @foreach (var phone in Phones)
                             {
-                                <option value="@phone">@phone</option>
+                                <option value="@phone.SmartphoneId">@phone.Name</option>
                             }
                         </InputSelect>
                         <div class="text-sm text-red-600">
@@ -111,17 +98,21 @@
 
 @code {
     [Parameter] public EventCallback<bool> OnClose { get; set; }
-    [Parameter] public List<int> Phones { get; set; } = new();
+    [Parameter] public List<SmartphoneViewModel> Phones { get; set; } = new();
 
     public PictureCreationRequest Picture { get; set; } = new();
     public bool RequestInProcess { get; set; }
 
+
     private EditContext? editContext;
 
+    private bool UploadFiles { get; set; }
     private List<ImageFile> files = new();
     private List<FileUploadResponse> uploadResults = new();
-    private int maxAllowedFiles = 3;
+    private int maxAllowedFiles = 1;
     private bool shouldRender;
+
+    private MultipartFormDataContent Content { get; set; } = new();
 
     protected override Task OnInitializedAsync()
     {
@@ -145,12 +136,13 @@
 
         if (!editContext.Validate())
         {
+            Console.WriteLine("Form invalid");
             return;
         }
 
         RequestInProcess = true;
-
-        var response = await Client.PostAsync("/api/Picture/create", JsonContent.Create<PictureCreationRequest>(Picture));
+        await UploadFile();
+        //var response = await Client.PostAsync("/api/Picture/create", JsonContent.Create<PictureCreationRequest>(Picture));
         RequestInProcess = false;
         await OnClose.InvokeAsync(true);
     }
@@ -159,10 +151,10 @@
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
         shouldRender = false;
-        long maxFileSize = 1024 * 15;
-        var upload = false;
+        //long maxFileSize = 1024 * 15;
+        UploadFiles = false;
 
-        using var content = new MultipartFormDataContent();
+        var content = new MultipartFormDataContent();
 
         foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
         {
@@ -174,7 +166,7 @@
                     files.Add(new() { FileName = file.Name });
 
                     var fileContent =
-                        new StreamContent(file.OpenReadStream(maxFileSize));
+                        new StreamContent(file.OpenReadStream());
 
                     fileContent.Headers.ContentType =
                         new MediaTypeHeaderValue(file.ContentType);
@@ -184,7 +176,8 @@
                         name: "\"files\"",
                         fileName: file.Name);
 
-                    upload = true;
+                    Content = content;
+                    UploadFiles = true;
                 }
                 catch (Exception ex)
                 {
@@ -200,10 +193,15 @@
                 }
             }
         }
+        shouldRender = true;
+    }
 
-        if (upload)
+    private async Task UploadFile()
+    {
+        if (UploadFiles)
         {
-            var response = await Client.PostAsync("/api/Smartphone/addpicture", content);
+            Console.WriteLine("uploading");
+            var response = await Client.PostAsync($"/api/Picture/upload/{Picture.SmartphoneId}", Content);
 
             var newUploadResults = await response.Content
                 .ReadFromJsonAsync<IList<FileUploadResponse>>();
@@ -213,8 +211,6 @@
                 uploadResults = uploadResults.Concat(newUploadResults).ToList();
             }
         }
-
-        shouldRender = true;
     }
 
     private static bool FileUpload(IList<FileUploadResponse> uploadResults,

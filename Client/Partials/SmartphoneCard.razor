@@ -17,13 +17,28 @@
             </div>
         </div>
         <div class="rounded">
-            <img class="object-cover rounded-b-lg" loading="lazy" src="http://via.placeholder.com/200x200" style="height: 200px; width: 100%;" />
+            @if (!string.IsNullOrEmpty(TeaserPicture))
+            {
+                <img class="object-cover rounded-b-lg" loading="lazy" src="@TeaserPicture" style="height: 200px; width: 100%;" />
+            }
         </div>
     </div>
 </article>
 
 @code {
     [Parameter] public SmartphoneViewModel Smartphone { get; set; } = new();
+    public string TeaserPicture { get; set; } = string.Empty;
+
+    protected override Task OnInitializedAsync()
+    {
+        if (Smartphone.Pictures.Count > 0)
+        {
+            TeaserPicture = Smartphone.Pictures.First().PathToData;
+
+        }
+
+        return base.OnInitializedAsync();
+    }
 
     public void GoToDetails()
     {
