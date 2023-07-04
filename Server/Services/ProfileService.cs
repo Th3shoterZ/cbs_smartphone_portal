@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SmartphonePortal_Vervoort_Wagner.Server.Data;
 using SmartphonePortal_Vervoort_Wagner.Server.Interfaces;
 using SmartphonePortal_Vervoort_Wagner.Server.Models;
@@ -30,7 +31,7 @@ public class ProfileService : IProfileService
 
     public async Task<ProfileViewModel> GetProfileById(string id)
     {
-        var user = _dbContext.Users.FirstOrDefault(x => x.Id.Equals(id));
+        var user = _dbContext.Users.Where(x => x.Id.Equals(id)).Include(x=>x.Reviews).ToList().FirstOrDefault();
         if (id == null || user == null)
         {
             return new ProfileViewModel();

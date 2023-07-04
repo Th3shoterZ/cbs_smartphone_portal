@@ -35,11 +35,6 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Data
                 .HasForeignKey(r => r.SmartphoneId);
 
             builder.Entity<Smartphone>()
-                .HasMany<Rating>(s => s.Ratings)
-                .WithOne(r => r.Smartphone)
-                .HasForeignKey(r => r.SmartphoneId);
-
-            builder.Entity<Smartphone>()
                 .HasMany<Picture>(pd => pd.Pictures)
                 .WithOne(p => p.Smartphone)
                 .HasForeignKey(p => p.SmartphoneId);
@@ -60,11 +55,6 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Data
                .HasForeignKey(sm => sm.ManufacturerId);
 
             builder.Entity<ApplicationUser>()
-                .HasMany<Rating>(u => u.Ratings)
-                .WithOne(r => r.User)
-                .HasForeignKey(r => r.UserId);
-
-            builder.Entity<ApplicationUser>()
                 .HasMany<Review>(u => u.Reviews)
                 .WithOne(r => r.User)
                 .HasForeignKey(r => r.UserId);
@@ -78,11 +68,6 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Data
                 .HasMany<Comment>(r => r.Comments)
                 .WithOne(c => c.Review)
                 .HasForeignKey(c => c.CommentId);
-
-            builder.Entity<Review>()
-                .HasMany<Rating>(rev => rev.Ratings)
-                .WithOne(rat => rat.Review)
-                .HasForeignKey(rat => rat.RatingId);
         }
 
         public DbSet<Smartphone> Smartphones { get; set; }
@@ -90,7 +75,6 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Processor> Processors { get; set; }
         public DbSet<Picture> Pictures { get; set; }
-        public DbSet<Rating> Ratings { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public new virtual DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }

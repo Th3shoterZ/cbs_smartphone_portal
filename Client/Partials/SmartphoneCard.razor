@@ -1,19 +1,19 @@
-﻿@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
+﻿@using MudBlazor
+@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
 @inject NavigationManager navigationManager
 
 <article>
     <div @onclick=@GoToDetails class="flex flex-col bg-gradient-to-l from-sky-500 to-indigo-500 my-2 mx-auto text-white rounded-lg cursor-pointer hover:scale-105 transition">
-        <div class="flex justify-between mb-2 p-2 ">
-            <div class="flex flex-col">
-                <div class="font-bold text-xl">
-                    @Smartphone.Name
-                </div>
-                <div>
-                    @Smartphone.Manufacturer.Name
-                </div>
+        <div class="grid grid-cols-2 mb-2 p-2 ">
+            <div class="col-span-2 font-bold text-xl">
+                @Smartphone.Name
             </div>
-            <div class="self-end">
-                <StarRating Rating="Smartphone.Rating" />
+            <div>
+                @Smartphone.Manufacturer.Name
+            </div>
+            <div class="text-right">
+                @*<StarRating Rating="Smartphone.Rating" />*@
+                <MudRating Disabled="true" ReadOnly="true" SelectedValue="Smartphone.Rating" />
             </div>
         </div>
         <div class="rounded">
@@ -36,7 +36,6 @@
             TeaserPicture = Smartphone.Pictures.First().PathToData;
 
         }
-        Console.WriteLine(TeaserPicture);
         return base.OnInitializedAsync();
     }
 

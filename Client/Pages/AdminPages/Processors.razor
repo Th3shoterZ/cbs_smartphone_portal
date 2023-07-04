@@ -1,6 +1,7 @@
 ﻿@page "/admin/processors"
 
 @using Microsoft.AspNetCore.Authorization
+@using MudBlazor
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials.Processor
 @using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
@@ -42,51 +43,37 @@
                 <ProcessorDeleteModal OnClose="@OnDeleteModalClose" Processor="ProcessorToDelete" />
             }
 
-
-            <div class="divide-y">
-
-                <div class="grid grid-cols-12 divide-x overflow-hidden font-bold">
-                    <div class="h-10 px-2 pt-2 overflow-hidden">
-                        Id
-                    </div>
-                    <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                        Title
-                    </div>
-                    <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                        Core Count
-                    </div>
-                    <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                        Gigaherz
-                    </div>
-                    <div class="h-10 text-center flex justify-center col-span-2 overflow-hidden">
-                        <button class="w-full hover:bg-green-300"
-                            @onclick=@OpenAddModal>
-                            <i class="fa-solid fa-square-plus fa-lg"></i>
-                        </button>
-                    </div>
-                </div>
-                @foreach (var processor in ProcessorModels)
-                {
-                    <div class="grid grid-cols-12 divide-x overflow-hidden">
-                        <div class="h-10 px-2 pt-2 overflow-hidden">
-                            @processor.ProcessorId
+            <MudTable Items="@ProcessorModels" Dense="@true" Hover="@true" Bordered="@true" Filter="new Func<ProcessorViewModel,bool>(FilterFunc1)">
+                <ToolBarContent>
+                    <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Id</MudTh>
+                    <MudTh>Title</MudTh>
+                    <MudTh>Core Count</MudTh>
+                    <MudTh>Gigaherz</MudTh>
+                    <MudTh Class="w-20">
+                        <div class="w-20 h-10">
+                            <button class="w-full h-full hover:bg-green-300"
+                                @onclick=@OpenAddModal>
+                                <i class="fa-solid fa-square-plus fa-lg"></i>
+                            </button>
                         </div>
-                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                            @processor.Title
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Id">@context.ProcessorId</MudTd>
+                    <MudTd DataLabel="Title">@context.Title</MudTd>
+                    <MudTd DataLabel="Core Count">@context.Gigaherz</MudTd>
+                    <MudTd DataLabel="Gigaherz">@context.CoreCount</MudTd>
+                    <MudTd>
+                        <div class="h-10 flex justify-between">
+                            <button class="flex-1 hover:bg-sky-400 focus:bg-sky-400 transition ease-in-out" @onclick="() => OpenEditModal(context)"><i class="fa-solid fa-pen"></i></button>
+                            <button class="flex-1 hover:bg-red-400 focus:bg-red-400 transition ease-in-out" @onclick="() => OpenDeleteModal(context)"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                            @processor.CoreCount
-                        </div>
-                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                            @processor.Gigaherz
-                        </div>
-                        <div class="flex h-10 divide-x col-span-2 overflow-hidden">
-                            <button class="flex-1 hover:bg-sky-400 focus:bg-sky-400 transition ease-in-out" @onclick="() => OpenEditModal(processor)"><i class="fa-solid fa-pen"></i></button>
-                            <button class="flex-1 hover:bg-red-400 focus:bg-red-400 transition ease-in-out" @onclick="() => OpenDeleteModal(processor)"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                }
-            </div>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
         }
         else
         {
@@ -171,5 +158,17 @@
         {
             IsDataFetched = true;
         }
+    }
+
+    private String searchString1 { get; set; } = string.Empty;
+    private bool FilterFunc1(ProcessorViewModel element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(ProcessorViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if ($"{element.ProcessorId} {element.Title} {element.Gigaherz} {element.CoreCount} ".Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
 }

@@ -15,6 +15,5 @@ public class Smartphone
     public int ProcessorId { get; set; }
     public Processor Processor { get; set; } = new();
     public List<Picture> Pictures { get; set; } = new();
-    public List<Rating> Ratings { get; set; } = new();
     public List<Review> Reviews { get; set; } = new();
 }

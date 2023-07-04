@@ -1,6 +1,7 @@
 ﻿@page "/admin/manufacturers"
 
 @using Microsoft.AspNetCore.Authorization
+@using MudBlazor
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials.Manufacturer
 @using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
@@ -42,57 +43,42 @@
                 <ManufacturerDeleteModal OnClose="@OnDeleteModalClose" Manufacturer="ManufacturerToDelete" />
             }
 
-
-            <div class="divide-y">
-
-                <div class="grid grid-cols-12 divide-x overflow-hidden font-bold">
-                    <div class="h-10 px-2 pt-2 overflow-hidden">
-                        Id
-                    </div>
-                    <div class="h-10 px-2 pt-2 overflow-hidden col-span-3">
-                        Name
-                    </div>
-                    <div class="h-10 px-2 pt-2 overflow-hidden col-span-3">
-                        Description
-                    </div>
-                    <div class="h-10 px-2 pt-2 overflow-hidden col-span-3">
-                        Link to Homepage
-                    </div>
-                    <div class="h-10 text-center flex justify-center col-span-2 overflow-hidden">
-                        <button class="w-full hover:bg-green-300"
-                            @onclick=@OpenAddModal>
-                            <i class="fa-solid fa-square-plus fa-lg"></i>
-                        </button>
-                    </div>
-                </div>
-                @foreach (var manufacturer in ManufacturerModels)
-                {
-                    <div class="grid grid-cols-12 overflow-hidden divide-x">
-                        <div class="h-10 px-2 pt-2 overflow-hidden">
-                            @manufacturer.ManufacturerId
+            <MudTable Items="@ManufacturerModels" Dense="@true" Hover="@true" Bordered="@true" Filter="new Func<ManufacturerViewModel,bool>(FilterFunc1)">
+                <ToolBarContent>
+                    <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Id</MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Description</MudTh>
+                    <MudTh>Link to Homepage</MudTh>
+                    <MudTh Class="w-20">
+                        <div class="w-20 h-10">
+                            <button class="w-full h-full hover:bg-green-300"
+                                @onclick=@OpenAddModal>
+                                <i class="fa-solid fa-square-plus fa-lg"></i>
+                            </button>
                         </div>
-                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                            @manufacturer.Name
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Id">@context.ManufacturerId</MudTd>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Description">@context.Description</MudTd>
+                    <MudTd DataLabel="Link to Homepage">
+                        <a class="text-blue-400 hover:underline hover:text-blue-600"
+                           href="@context.LinkToHomePage">
+                            @context.LinkToHomePage
+                        </a>
+                    </MudTd>
+                    <MudTd>
+                        <div class="h-10 flex justify-between">
+                            <button class="flex-1 hover:bg-sky-400 focus:bg-sky-400 transition ease-in-out" @onclick="() => OpenEditModal(context)"><i class="fa-solid fa-pen"></i></button>
+                            <button class="flex-1 hover:bg-red-400 focus:bg-red-400 transition ease-in-out" @onclick="() => OpenDeleteModal(context)"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                            @manufacturer.Description
-                        </div>
-                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                            @if (!string.IsNullOrEmpty(manufacturer.LinkToHomePage))
-                            {
-                                <a class="text-blue-400 hover:underline hover:text-blue-600"
-                       href="@manufacturer.LinkToHomePage">
-                                    @manufacturer.LinkToHomePage
-                                </a>
-                            }
-                        </div>
-                        <div class="flex h-10 divide-x col-span-2 overflow-hidden">
-                            <button class="flex-1 hover:bg-sky-400 focus:bg-sky-400 transition ease-in-out" @onclick="() => OpenEditModal(manufacturer)"><i class="fa-solid fa-pen"></i></button>
-                            <button class="flex-1 hover:bg-red-400 focus:bg-red-400 transition ease-in-out" @onclick="() => OpenDeleteModal(manufacturer)"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                }
-            </div>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
         }
         else
         {
@@ -111,6 +97,7 @@
     public bool IsEditModalOpen { get; set; }
     public bool IsAddModalOpen { get; set; }
     public bool IsDeleteModalOpen { get; set; }
+
 
     public ManufacturerViewModel ManufacturerToEdit { get; set; } = new();
     public ManufacturerViewModel ManufacturerToDelete { get; set; } = new();
@@ -178,5 +165,19 @@
         {
             IsDataFetched = true;
         }
+    }
+
+
+
+    private String searchString1 { get; set; } = string.Empty;
+    private bool FilterFunc1(ManufacturerViewModel element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(ManufacturerViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if ($"{element.ManufacturerId} {element.Description} {element.Name} {element.LinkToHomePage}".Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
 }

@@ -1,6 +1,7 @@
 ﻿@page "/admin/pictures"
 
 @using Microsoft.AspNetCore.Authorization
+@using MudBlazor
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials.Picture
 @using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
@@ -41,51 +42,37 @@
                 <PictureDeleteModal OnClose="@OnDeleteModalClose" Picture="PictureToDelete" />
             }
 
-
-            <div class="divide-y">
-
-                <div class="grid grid-cols-12 divide-x overflow-hidden font-bold">
-                    <div class="h-10 px-2 pt-2 overflow-hidden">
-                        Id
-                    </div>
-                    <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                        Title
-                    </div>
-                    <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                        Path
-                    </div>
-                    <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                        SmartphoneId
-                    </div>
-                    <div class="h-10 text-center flex justify-center col-span-2 overflow-hidden">
-                        <button class="w-full hover:bg-green-300"
-                            @onclick=@OpenAddModal>
-                            <i class="fa-solid fa-square-plus fa-lg"></i>
-                        </button>
-                    </div>
-                </div>
-                @foreach (var picture in PictureModels)
-                {
-                    <div class="grid grid-cols-12 divide-x overflow-hidden">
-                        <div class="h-10 px-2 pt-2 overflow-hidden">
-                            @picture.PictureId
+            <MudTable Items="@PictureModels" Dense="@true" Hover="@true" Bordered="@true" Filter="new Func<PictureViewModel,bool>(FilterFunc1)">
+                <ToolBarContent>
+                    <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Id</MudTh>
+                    <MudTh>Title</MudTh>
+                    <MudTh>Path</MudTh>
+                    <MudTh>SmartphoneId</MudTh>
+                    <MudTh Class="w-20">
+                        <div class="w-20 h-10">
+                            <button class="w-full h-full hover:bg-green-300"
+                                @onclick=@OpenAddModal>
+                                <i class="fa-solid fa-square-plus fa-lg"></i>
+                            </button>
                         </div>
-                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                            @picture.Title
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Id">@context.PictureId</MudTd>
+                    <MudTd DataLabel="Title">@context.Title</MudTd>
+                    <MudTd DataLabel="Path">@context.PathToData</MudTd>
+                    <MudTd DataLabel="SmartphoneId">@context.SmartphoneId</MudTd>
+                    <MudTd>
+                        <div class="h-10 flex justify-between">
+                            <button class="flex-1 hover:bg-sky-400 focus:bg-sky-400 transition ease-in-out" @onclick="() => OpenEditModal(context)"><i class="fa-solid fa-pen"></i></button>
+                            <button class="flex-1 hover:bg-red-400 focus:bg-red-400 transition ease-in-out" @onclick="() => OpenDeleteModal(context)"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                            @picture.PathToData
-                        </div>
-                        <div class="h-10 px-2 pt-2 col-span-3 overflow-hidden">
-                            @picture.SmartphoneId
-                        </div>
-                        <div class="flex h-10 divide-x col-span-2 overflow-hidden">
-                            <button class="flex-1 hover:bg-sky-400 focus:bg-sky-400 transition ease-in-out" @onclick="() => OpenEditModal(picture)"><i class="fa-solid fa-pen"></i></button>
-                            <button class="flex-1 hover:bg-red-400 focus:bg-red-400 transition ease-in-out" @onclick="() => OpenDeleteModal(picture)"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                }
-            </div>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
         }
         else
         {
@@ -187,5 +174,17 @@
         {
             IsDataFetched = true;
         }
+    }
+
+    private String searchString1 { get; set; } = string.Empty;
+    private bool FilterFunc1(PictureViewModel element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(PictureViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if ($"{element.PictureId} {element.SmartphoneId} {element.PathToData} {element.Title}".Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
 }

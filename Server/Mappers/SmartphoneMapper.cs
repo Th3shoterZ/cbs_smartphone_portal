@@ -40,10 +40,13 @@ public class SmartphoneMapper : IMapper<Smartphone, SmartphoneViewModel>
             result.Category = _categoryMapper.GetMappedResult(model.Category);
         }
 
-        if (model.Ratings != null && model.Ratings.Count > 0)
+        if (model.Reviews != null && model.Reviews.Count > 0)
         {
-            List<int> stars = ((List<int>)(from Stars in model.Ratings
-                                           select Stars));
+            List<int> stars = new();
+            foreach (var review in model.Reviews)
+            {
+                stars.Add(review.Rating);
+            }
             result.Rating = (int)stars.Average();
         }
 

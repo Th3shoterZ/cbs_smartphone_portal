@@ -22,7 +22,8 @@ public class ReviewMapper : IMapper<Review, ReviewViewModel>
             Title = model.Title,
             UserId = model.UserId,
             SmartphoneId = model.SmartphoneId,
-            UserName = model.User.UserName
+            UserName = model.User.UserName,
+            Rating = model.Rating,
         };
 
         if (model.Comments != null && model.Comments.Count > 0)
@@ -31,15 +32,6 @@ public class ReviewMapper : IMapper<Review, ReviewViewModel>
             foreach(var com in model.Comments)
             {
                 comments.Add(_mapper.GetMappedResult(com));
-            }
-        }
-
-        if (model.Ratings != null)
-        {
-            List<int> stars = model.Ratings.Select(x => x.Stars).ToList();
-            if (stars.Count > 0)
-            {
-                result.Rating = (int)stars.Average();
             }
         }
 

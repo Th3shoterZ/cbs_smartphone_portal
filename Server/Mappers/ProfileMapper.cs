@@ -8,16 +8,13 @@ public class ProfileMapper : IMapper<ApplicationUser, ProfileViewModel>
 {
     private readonly IMapper<Comment, CommentViewModel> _commentMapper;
     private readonly IMapper<Review, ReviewViewModel> _reviewMapper;
-    private readonly IMapper<Rating, RatingViewModel> _ratingMapper;
 
     public ProfileMapper(
         IMapper<Comment, CommentViewModel> commentMapper,
-        IMapper<Review, ReviewViewModel> reviewMapper,
-        IMapper<Rating, RatingViewModel> ratingMapper)
+        IMapper<Review, ReviewViewModel> reviewMapper)
     {
         _commentMapper = commentMapper;
         _reviewMapper = reviewMapper;
-        _ratingMapper = ratingMapper;
     }
 
     public ProfileViewModel GetMappedResult(ApplicationUser model)
@@ -34,14 +31,6 @@ public class ProfileMapper : IMapper<ApplicationUser, ProfileViewModel>
             foreach (var comment in model.Comments)
             {
                 result.Comments.Add(_commentMapper.GetMappedResult(comment));
-            }
-        }
-
-        if (model.Ratings != null)
-        {
-            foreach (Rating rating in model.Ratings)
-            {
-                result.Ratings.Add(_ratingMapper.GetMappedResult(rating));
             }
         }
 

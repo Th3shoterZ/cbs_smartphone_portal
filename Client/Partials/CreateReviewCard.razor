@@ -1,4 +1,5 @@
-﻿@using SmartphonePortal_Vervoort_Wagner.Shared.Requests
+﻿@using MudBlazor
+@using SmartphonePortal_Vervoort_Wagner.Shared.Requests
 @inject HttpClient Client
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -28,6 +29,12 @@
                                @bind-Value="@NewReview.Text" />
                 <div class="text-sm text-red-600">
                     <ValidationMessage For=@( () => NewReview.Text) />
+                </div>
+            </div>
+            <div>
+                    <MudRating SelectedValueChanged="@OnRatingChange" SelectedValue="@NewReview.Rating" />
+                <div class="text-sm text-red-600">
+                    <ValidationMessage For=@( () => NewReview.Rating) />
                 </div>
             </div>
             <div class="flex justify-end p-6 space-x-2 border-t border-gray-200 rounded-b">
@@ -67,6 +74,16 @@
 
     public async Task Submit()
     {
+        if (editContext == null)
+        {
+            Console.WriteLine("Editcontext is null");
+            return;
+        }
+        if (!editContext.Validate())
+        {
+            return;
+        }
+
         try
         {
             var response = await Client.PostAsJsonAsync<ReviewCreationRequest>("/api/Review/create", NewReview);
@@ -76,5 +93,10 @@
         {
             Console.WriteLine(ex);
         }
+    }
+
+    public void OnRatingChange(int newVal)
+    {
+        NewReview.Rating = newVal;
     }
 }

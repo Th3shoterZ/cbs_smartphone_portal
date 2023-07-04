@@ -47,7 +47,8 @@ public class SmartphoneService : ISmartphoneService
         var smartPhones = _dbContext.Smartphones.Include(x => x.Category)
             .Include(x => x.Processor)
             .Include(x => x.Manufacturer)
-            .Include(x => x.Pictures).ToList();
+            .Include(x => x.Pictures)
+            .Include(x => x.Reviews).ToList();
         List<SmartphoneViewModel> phones = new();
         foreach (Smartphone smartphone in smartPhones)
         {
@@ -154,6 +155,7 @@ public class SmartphoneService : ISmartphoneService
            .Include(x => x.Processor)
            .Include(x => x.Manufacturer)
            .Include(x => x.Pictures)
+           .Include(x => x.Reviews)
            .FirstOrDefault(x => x.SmartphoneId == request.SmartphoneId);
 
         if (phone == null) return result;

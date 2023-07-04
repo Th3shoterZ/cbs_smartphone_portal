@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartphonePortal_Vervoort_Wagner.Server.Data;
 
@@ -10,9 +11,10 @@ using SmartphonePortal_Vervoort_Wagner.Server.Data;
 namespace SmartphonePortal_Vervoort_Wagner.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230704192815_rating-update")]
+    partial class ratingupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,15 +190,15 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "cf537e9a-f321-4221-8b43-ac5047e4fb14",
-                            ConcurrencyStamp = "a7960943-e444-4692-81bd-66ddf131de4f",
+                            Id = "00d4030d-2fbc-44c2-8bbe-7a89a0c3a1aa",
+                            ConcurrencyStamp = "a5aa17b2-3284-46b2-a4ae-bda7b5852e8c",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "000f9371-f96f-451d-8e63-984ebb7b6916",
-                            ConcurrencyStamp = "25854333-bc13-461b-9818-8d8f9d7b83f3",
+                            Id = "37ef961e-e31e-479c-8321-16a29e0ae1a9",
+                            ConcurrencyStamp = "c98becfd-bbc0-421f-80d9-8400ea9ebf8e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -479,6 +481,10 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Migrations
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Rating", b =>
                 {
                     b.Property<int>("RatingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReviewId")
                         .HasColumnType("int");
 
                     b.Property<int>("SmartphoneId")
@@ -493,17 +499,22 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Migrations
 
                     b.HasKey("RatingId");
 
+                    b.HasIndex("ReviewId");
+
                     b.HasIndex("SmartphoneId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("Rating");
                 });
 
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Review", b =>
                 {
                     b.Property<int>("ReviewId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.Property<int>("SmartphoneId")
@@ -520,10 +531,6 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("ReviewId");
 
@@ -662,13 +669,13 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Migrations
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Rating", b =>
                 {
                     b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.Review", "Review")
-                        .WithMany("Ratings")
-                        .HasForeignKey("RatingId")
+                        .WithMany()
+                        .HasForeignKey("ReviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SmartphonePortal_Vervoort_Wagner.Server.Models.Smartphone", "Smartphone")
-                        .WithMany("Ratings")
+                        .WithMany()
                         .HasForeignKey("SmartphoneId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -759,15 +766,11 @@ namespace SmartphonePortal_Vervoort_Wagner.Server.Migrations
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Review", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("SmartphonePortal_Vervoort_Wagner.Server.Models.Smartphone", b =>
                 {
                     b.Navigation("Pictures");
-
-                    b.Navigation("Ratings");
 
                     b.Navigation("Reviews");
                 });

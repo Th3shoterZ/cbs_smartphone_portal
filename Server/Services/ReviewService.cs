@@ -95,6 +95,7 @@ public class ReviewService : IReviewService
             Title = request.Title,
             Smartphone = smartphone,
             User = user,
+            Rating = request.Rating,
         };
         _dbContext.Reviews.Add(review);
         await _dbContext.SaveChangesAsync();

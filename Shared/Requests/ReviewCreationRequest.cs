@@ -11,4 +11,6 @@ public class ReviewCreationRequest
     public string Text { get; set; } = string.Empty;
     public int SmartphoneId { get; set; }
     public string UserId { get; set; } = string.Empty;
+    [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5")]
+    public int Rating { get; set; }
 }

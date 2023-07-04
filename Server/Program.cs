@@ -83,7 +83,6 @@ builder.Services.AddTransient<IPictureService, PictureService>();
 // mappers
 builder.Services.AddTransient<IMapper<Processor, ProcessorViewModel>, ProcessorMapper>();
 builder.Services.AddTransient<IMapper<Comment, CommentViewModel>, CommentMapper>();
-builder.Services.AddTransient<IMapper<Rating, RatingViewModel>, RatingMapper>();
 builder.Services.AddTransient<IMapper<Review, ReviewViewModel>, ReviewMapper>();
 builder.Services.AddTransient<IMapper<ApplicationUser, ProfileViewModel>, ProfileMapper>();
 builder.Services.AddTransient<IMapper<Smartphone, SmartphoneViewModel>, SmartphoneMapper>();

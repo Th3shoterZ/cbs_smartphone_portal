@@ -1,6 +1,7 @@
 ﻿@page "/admin/categories"
 
 @using Microsoft.AspNetCore.Authorization
+@using MudBlazor
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials
 @using SmartphonePortal_Vervoort_Wagner.Client.Partials.Category
 @using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels
@@ -42,39 +43,33 @@
                 <CategoryDeleteModal OnClose="@OnDeleteModalClose" Category="CategoryToDelete" />
             }
 
-
-            <div class="divide-y">
-
-                <div class="grid grid-cols-12 divide-x overflow-hidden font-bold">
-                    <div class="h-10 px-2 pt-2 overflow-hidden">
-                        Id
-                    </div>
-                    <div class="h-10 px-2 pt-2 col-span-9 overflow-hidden">
-                        Name
-                    </div>
-                    <div class="h-10 text-center flex justify-center col-span-2 overflow-hidden">
-                        <button class="w-full hover:bg-green-300"
-                            @onclick=@OpenAddModal>
-                            <i class="fa-solid fa-square-plus fa-lg"></i>
-                        </button>
-                    </div>
-                </div>
-                @foreach (var category in CategoryModels)
-                {
-                    <div class="grid grid-cols-12 divide-x overflow-hidden">
-                        <div class="h-10 px-2 pt-2 overflow-hidden">
-                            @category.CategoryId
+            <MudTable Items="@CategoryModels" Dense="@true" Hover="@true" Bordered="@true" Filter="new Func<CategoryViewModel,bool>(FilterFunc1)">
+                <ToolBarContent>
+                    <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Id</MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh Class="w-20">
+                        <div class="w-20 h-10">
+                            <button class="w-full h-full hover:bg-green-300"
+                                @onclick=@OpenAddModal>
+                                <i class="fa-solid fa-square-plus fa-lg"></i>
+                            </button>
                         </div>
-                        <div class="h-10 px-2 pt-2 col-span-9 overflow-hidden">
-                            @category.Name
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Id">@context.CategoryId</MudTd>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd>
+                        <div class="h-10 flex justify-between">
+                            <button class="flex-1 hover:bg-sky-400 focus:bg-sky-400 transition ease-in-out" @onclick="() => OpenEditModal(context)"><i class="fa-solid fa-pen"></i></button>
+                            <button class="flex-1 hover:bg-red-400 focus:bg-red-400 transition ease-in-out" @onclick="() => OpenDeleteModal(context)"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                        <div class="flex h-10 divide-x col-span-2 overflow-hidden">
-                            <button class="flex-1 hover:bg-sky-400 focus:bg-sky-400 transition ease-in-out" @onclick="() => OpenEditModal(category)"><i class="fa-solid fa-pen"></i></button>
-                            <button class="flex-1 hover:bg-red-400 focus:bg-red-400 transition ease-in-out" @onclick="() => OpenDeleteModal(category)"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                }
-            </div>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
         }
         else
         {
@@ -161,5 +156,17 @@
         {
             IsDataFetched = true;
         }
+    }
+
+    private String searchString1 { get; set; } = string.Empty;
+    private bool FilterFunc1(CategoryViewModel element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(CategoryViewModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if ($"{element.CategoryId} {element.Name}".Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
 }

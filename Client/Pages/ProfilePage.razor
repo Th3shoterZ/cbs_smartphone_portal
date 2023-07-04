@@ -1,0 +1,94 @@
+﻿@page "/profile"
+@using MudBlazor
+@using SmartphonePortal_Vervoort_Wagner.Client.Partials
+@using SmartphonePortal_Vervoort_Wagner.Shared.ViewModels;
+@inject NavigationManager navigationManager
+
+
+<PageTitle>Profile</PageTitle>
+
+
+@inject IHttpClientFactory ClientFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (IsRequestInProcess)
+{
+    <Loader />
+}
+else
+{
+    <div class="mb-10">
+        <div>
+            <div class="mt-10 mx-auto max-w-3xl">
+                <h1 class="text-3xl">Hey, @Profile.UserName !</h1>
+                <hr />
+                <div class="my-10">
+                    <h2 class="text-2xl">Your Reviews</h2>
+                    <MudTable Items="@Profile.Reviews" Dense="@true" Hover="@true" Bordered="@true">
+                        <HeaderContent>
+                            <MudTh>Id</MudTh>
+                            <MudTh>Title</MudTh>
+                            <MudTh>Text</MudTh>
+                            <MudTh>Rating</MudTh>
+                            <MudTh>SmartphoneId</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Id">@context.ReviewId</MudTd>
+                            <MudTd DataLabel="Title">@context.Title</MudTd>
+                            <MudTd DataLabel="Text">@context.Text</MudTd>
+                            <MudTd DataLabel="Rating">@context.Rating</MudTd>
+                            <MudTd DataLabel="SmartphoneId">
+                                <a href="/smartphone/@context.SmartphoneId">
+                                    @context.SmartphoneId
+                                </a>
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool IsRequestInProcess { get; set; }
+    private ProfileViewModel Profile { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsRequestInProcess = true;
+        try
+        {
+            await FetchData();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        await base.OnInitializedAsync();
+
+        IsRequestInProcess = false;
+    }
+
+    private async Task FetchData()
+    {
+        var client = ClientFactory.CreateClient("AnonymousApi");
+
+        var authstate = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        var response = await client.GetFromJsonAsync<ProfileViewModel>($"/api/Profile/id/{authstate.User.FindFirst(c => c.Type == "sub")?.Value}");
+        if (response != null)
+        {
+            Profile = response;
+        }
+        else
+        {
+            navigationManager.NavigateTo("/");
+        }
+
+    }
+    private void MoveToSmartphone()
+    {
+
+    }
+}
