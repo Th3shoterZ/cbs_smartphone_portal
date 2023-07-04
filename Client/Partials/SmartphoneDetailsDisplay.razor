@@ -26,16 +26,21 @@ else
             }
         </p>
     </div>
-    <MudCarousel Class="mud-width-full" Style="height:400px" ShowArrows="@true" ShowBullets="@true" EnableSwipeGesture="@true" AutoCycle="@true" TData="object">
-        @foreach (var picture in Smartphone.Pictures)
-        {
-            <MudCarouselItem Transition="Transition.Slide" Color="@Color.Primary">
-                <div class="d-flex" style="height:100%">
-                    <img class="mx-auto my-10" src="@picture.PathToData" alt="@picture.Title" />
-                </div>
-            </MudCarouselItem>
-        }
-    </MudCarousel>
+    if (Smartphone.Pictures != null && Smartphone.Pictures.Count > 0)
+    {
+        <div>
+            <MudCarousel Class="mud-width-full" Style="height:400px" ShowArrows="@true" ShowBullets="@true" EnableSwipeGesture="@true" AutoCycle="@true" TData="object">
+                @foreach (var picture in Smartphone.Pictures)
+                {
+                    <MudCarouselItem Transition="Transition.Slide" Color="@Color.Primary">
+                        <div class="d-flex" style="height:100%">
+                            <img class="mx-auto my-10" src="@picture.PathToData" alt="@picture.Title" />
+                        </div>
+                    </MudCarouselItem>
+                }
+            </MudCarousel>
+        </div>
+    }
     <div class="border divide-y">
         <div class="grid grid-cols-4 divide-x">
             <div class="col-span-1 p-2">

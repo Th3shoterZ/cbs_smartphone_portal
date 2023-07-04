@@ -50,11 +50,11 @@
 </div>
 
 @code {
-    public List<SmartphoneViewModel> Smartphones { get; set; } = new();
-    public List<SmartphoneViewModel> FilteredSmartphones { get; set; } = new();
-    public List<CategoryViewModel> Categories { get; set; } = new();
-    public int SelectedCategory { get; set; } = new();
-    public bool IsRequestInProcess { get; set; }
+    private List<SmartphoneViewModel> Smartphones { get; set; } = new();
+    private List<SmartphoneViewModel> FilteredSmartphones { get; set; } = new();
+    private List<CategoryViewModel> Categories { get; set; } = new();
+    private int SelectedCategory { get; set; } = new();
+    private bool IsRequestInProcess { get; set; }
     private HttpClient? _client;
 
 
@@ -83,20 +83,20 @@
         await base.OnInitializedAsync();
     }
 
-    public void OnCategoryChange(ChangeEventArgs args)
+    public async Task OnCategoryChange(ChangeEventArgs args)
     {
-        Console.WriteLine("hello?");
-        Console.WriteLine();
-
         var newVal = 0;
         if (args != null && args.Value != null)
         {
             newVal = int.Parse(args.Value.ToString() ?? "");
         }
-
+        FilteredSmartphones = new();
+        await Task.Delay(1); // I AM SCREAMING WHY THE FUCK DO I HAVE TO DO THIS!1!!!! I JUST CANNOT FIGURE OUT WHY THE DAMN CHILD COMPONENTS DONT RENDER SO I HAVE TO DO THIS MONSTROSITY
         SelectedCategory = newVal;
         FilteredSmartphones = newVal > 0
         ? FilteredSmartphones = Smartphones.Where(x => x.Category.CategoryId.Equals(SelectedCategory)).ToList()
         : FilteredSmartphones = Smartphones;
+
+        StateHasChanged();
     }
 }
