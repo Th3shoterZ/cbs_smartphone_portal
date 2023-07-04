@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 using SmartphonePortal_Vervoort_Wagner.Client;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -17,5 +18,7 @@ builder.Services.AddHttpClient("ServerApi", client => client.BaseAddress = new U
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("AnonymousApi"));
 
 builder.Services.AddApiAuthorization();
+
+builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();
