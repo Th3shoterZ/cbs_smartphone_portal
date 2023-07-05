@@ -91,7 +91,7 @@
             newVal = int.Parse(args.Value.ToString() ?? "");
         }
         FilteredSmartphones = new();
-        await Task.Delay(1); // I AM SCREAMING WHY THE FUCK DO I HAVE TO DO THIS!1!!!! I JUST CANNOT FIGURE OUT WHY THE DAMN CHILD COMPONENTS DONT RENDER SO I HAVE TO DO THIS MONSTROSITY
+        await Task.Delay(1); // I AM SCREAMING WHY THE F*CK DO I HAVE TO DO THIS!1!!!! I JUST CANNOT FIGURE OUT WHY THE DAMN CHILD COMPONENTS DONT RENDER SO I HAVE TO DO THIS MONSTROSITY
         SelectedCategory = newVal;
         FilteredSmartphones = newVal > 0
         ? FilteredSmartphones = Smartphones.Where(x => x.Category.CategoryId.Equals(SelectedCategory)).ToList()
