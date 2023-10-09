@@ -1,11 +1,12 @@
 # Smartphone Portal School Project
 
-## Basic Blazor application
+This is a basic Blazor application made for a school project.
 
 Build with
 - [MudBlazor](https://mudblazor.com/)
 - [TailwindCss](https://tailwindcss.com/)
 - [MySql](https://www.mysql.com/de/)
+
 
 ### Setup instructions
 
@@ -15,4 +16,4 @@ Build with
 
 
 
-by Kevin Wagner and Wout Vervoort
+by Kevin Wagner and Wout Vervoort ©
