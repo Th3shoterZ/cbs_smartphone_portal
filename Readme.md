@@ -2,6 +2,8 @@
 
 by Kevin Wagner and Wout Vervoort
 
+## Basic Blazor application
+
 ### Setup instructions
 
 1. clone project
