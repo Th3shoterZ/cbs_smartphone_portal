@@ -4,6 +4,8 @@
 
 Build with
 - [MudBlazor](https://mudblazor.com/)
+- [TailwindCss](https://tailwindcss.com/)
+- [MySql](https://www.mysql.com/de/)
 
 ### Setup instructions
 
